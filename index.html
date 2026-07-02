@@ -3418,8 +3418,7 @@ __ds_ns.Tabs = __ds_scope.Tabs;
 
 })();
 </script>
-<script>import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-/* peludin_site — shell + hero + stats + footer */
+<script>/* peludin_site — shell + hero + stats + footer */
 const DS = window.Pelud1nDesignSystem_5024cb;
 function TopBar({
   sections,
@@ -3439,7 +3438,7 @@ function TopBar({
     const id = setInterval(t, 1000);
     return () => clearInterval(id);
   }, []);
-  return /*#__PURE__*/_jsxs("header", {
+  return /*#__PURE__*/React.createElement("header", {
     style: {
       position: 'sticky',
       top: 0,
@@ -3453,70 +3452,60 @@ function TopBar({
       backdropFilter: 'blur(8px)',
       WebkitBackdropFilter: 'blur(8px)',
       borderBottom: '1px solid var(--color-border-strong)'
-    },
-    children: [/*#__PURE__*/_jsxs("a", {
-      href: "#home",
-      style: {
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 9,
-        textDecoration: 'none'
-      },
-      children: [/*#__PURE__*/_jsx(Logo, {
-        variant: "mark"
-      }), /*#__PURE__*/_jsx(Logo, {
-        size: "sm",
-        cursor: true
-      })]
-    }), /*#__PURE__*/_jsx("nav", {
-      className: "topnav",
-      style: {
-        marginLeft: 6
-      },
-      children: sections.map(s => /*#__PURE__*/_jsx("a", {
-        href: '#' + s.id,
-        className: active === s.id ? 'on' : '',
-        children: s.label
-      }, s.id))
-    }), /*#__PURE__*/_jsxs("span", {
-      style: {
-        marginLeft: 'auto',
-        fontFamily: 'var(--font-pixel)',
-        fontSize: 10,
-        textTransform: 'uppercase',
-        letterSpacing: '.06em',
-        color: 'var(--color-text-tertiary)'
-      },
-      children: ["sistema:\xA0", /*#__PURE__*/_jsx("span", {
-        style: {
-          color: 'var(--blood-bright)'
-        },
-        children: "comprometido"
-      })]
-    }), /*#__PURE__*/_jsx("span", {
-      style: {
-        fontFamily: 'var(--font-mono)',
-        fontSize: 12,
-        color: 'var(--color-text-secondary)'
-      },
-      children: clock
-    })]
-  });
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "#home",
+    style: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 9,
+      textDecoration: 'none'
+    }
+  }, /*#__PURE__*/React.createElement(Logo, {
+    variant: "mark"
+  }), /*#__PURE__*/React.createElement(Logo, {
+    size: "sm",
+    cursor: true
+  })), /*#__PURE__*/React.createElement("nav", {
+    className: "topnav",
+    style: {
+      marginLeft: 6
+    }
+  }, sections.map(s => /*#__PURE__*/React.createElement("a", {
+    key: s.id,
+    href: '#' + s.id,
+    className: active === s.id ? 'on' : ''
+  }, s.label))), /*#__PURE__*/React.createElement("span", {
+    style: {
+      marginLeft: 'auto',
+      fontFamily: 'var(--font-pixel)',
+      fontSize: 10,
+      textTransform: 'uppercase',
+      letterSpacing: '.06em',
+      color: 'var(--color-text-tertiary)'
+    }
+  }, "sistema:\xA0", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--blood-bright)'
+    }
+  }, "comprometido")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-mono)',
+      fontSize: 12,
+      color: 'var(--color-text-secondary)'
+    }
+  }, clock));
 }
 function Ticker() {
   const bits = ['// sistema comprometido', 'pelud1n estuvo aquí', 'acceso concedido', 'cífralo todo', 'no confíes en nada', 'root@pelud1n:~#'];
-  const run = [...bits, ...bits].map((b, i) => /*#__PURE__*/_jsxs("span", {
-    children: [b, /*#__PURE__*/_jsx("b", {
-      children: "\xA0//"
-    })]
-  }, i));
-  return /*#__PURE__*/_jsx("div", {
-    className: "ticker",
-    children: /*#__PURE__*/_jsxs("div", {
-      className: "ticker__run",
-      children: [run, run]
-    })
-  });
+  const run = [...bits, ...bits].map((b, i) => /*#__PURE__*/React.createElement("span", {
+    key: i
+  }, b, /*#__PURE__*/React.createElement("b", null, "\xA0//")));
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ticker"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ticker__run"
+  }, run, run));
 }
 function Hero() {
   const {
@@ -3528,182 +3517,150 @@ function Hero() {
     Window
   } = DS;
   const cwins = ['SCAN.LOG', 'PAYLOAD.SH', 'WHOAMI.EXE', 'ROOT.KEY', 'NMAP.OUT'];
-  return /*#__PURE__*/_jsxs("section", {
+  return /*#__PURE__*/React.createElement("section", {
     id: "home",
     style: {
       position: 'relative',
       maxWidth: 1180,
       margin: '0 auto',
       padding: '64px 24px 48px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cascade",
+    style: {
+      position: 'absolute',
+      inset: 0,
+      pointerEvents: 'none',
+      opacity: .42
     },
-    children: [/*#__PURE__*/_jsx("div", {
-      className: "cascade",
-      style: {
-        position: 'absolute',
-        inset: 0,
-        pointerEvents: 'none',
-        opacity: .42
-      },
-      "aria-hidden": "true",
-      children: cwins.map((t, i) => /*#__PURE__*/_jsx("div", {
-        className: "cwin",
-        style: {
-          right: 30 + i * 24,
-          top: 24 + i * 30
-        },
-        children: /*#__PURE__*/_jsx(Window, {
-          title: t,
-          inert: true,
-          children: /*#__PURE__*/_jsxs("span", {
-            style: {
-              fontFamily: 'var(--font-mono)',
-              fontSize: 12,
-              color: 'var(--color-text-tertiary)'
-            },
-            children: ["pelud1n takeover //", i + 1]
-          })
-        })
-      }, t))
-    }), /*#__PURE__*/_jsxs("div", {
-      className: "hero-grid",
-      style: {
-        position: 'relative',
-        display: 'grid',
-        gridTemplateColumns: 'minmax(0,1fr) 440px',
-        gap: 44,
-        alignItems: 'center'
-      },
-      children: [/*#__PURE__*/_jsxs("div", {
-        children: [/*#__PURE__*/_jsx("div", {
-          className: "eyebrow",
-          style: {
-            marginBottom: 20
-          },
-          children: "// seguridad ofensiva · red team"
-        }), /*#__PURE__*/_jsxs("div", {
-          style: {
-            display: 'flex',
-            alignItems: 'flex-end',
-            whiteSpace: 'nowrap'
-          },
-          children: [/*#__PURE__*/_jsxs("span", {
-            className: "bigword live",
-            "data-text": "pelud1n",
-            children: ["pelud", /*#__PURE__*/_jsx("span", {
-              className: "one",
-              children: "1"
-            }), "n"]
-          }), /*#__PURE__*/_jsx("span", {
-            style: {
-              display: 'inline-block',
-              width: 26,
-              height: 56,
-              background: 'var(--bone-pure)',
-              marginLeft: 8,
-              animation: 'peludin-blink 1.05s steps(1) infinite'
-            }
-          })]
-        }), /*#__PURE__*/_jsx(GlitchText, {
-          as: "div",
-          live: true,
-          style: {
-            fontSize: 32,
-            marginTop: 18
-          },
-          children: "ENTRA. DOCUMENTA. APRENDE."
-        }), /*#__PURE__*/_jsx("p", {
-          style: {
-            margin: '18px 0 0',
-            maxWidth: 440,
-            fontSize: 'var(--text-body-lg)',
-            color: 'var(--color-text-secondary)',
-            lineHeight: 'var(--leading-relaxed)'
-          },
-          children: "Juan Carlos Currás Gil — operador de seguridad ofensiva, recién titulado en un Máster en hacking ético (Sobresaliente). Practico el ciclo completo de intrusión en entornos de laboratorio controlados: reconocimiento, explotación, post-explotación y documentación. Voy hacia DevSecOps."
-        }), /*#__PURE__*/_jsxs("div", {
-          style: {
-            display: 'flex',
-            gap: 12,
-            flexWrap: 'wrap',
-            marginTop: 24
-          },
-          children: [/*#__PURE__*/_jsx(Button, {
-            as: "a",
-            href: "#ops",
-            glyph: ">",
-            children: "ver trabajo"
-          }), /*#__PURE__*/_jsx(Button, {
-            as: "a",
-            href: "#contact",
-            variant: "ghost",
-            children: "contactar"
-          })]
-        }), /*#__PURE__*/_jsxs("div", {
-          style: {
-            display: 'flex',
-            gap: 8,
-            flexWrap: 'wrap',
-            marginTop: 22
-          },
-          children: [/*#__PURE__*/_jsx(Badge, {
-            tone: "mint",
-            dot: true,
-            children: "disponible"
-          }), /*#__PURE__*/_jsx(Badge, {
-            tone: "neutral",
-            children: "eJPT"
-          }), /*#__PURE__*/_jsx(Badge, {
-            tone: "neutral",
-            children: "ICCA"
-          }), /*#__PURE__*/_jsx(Badge, {
-            tone: "neutral",
-            children: "MÁSTER"
-          })]
-        })]
-      }), /*#__PURE__*/_jsxs(Terminal, {
-        title: "root@pelud1n: ~",
-        status: "online",
-        children: [/*#__PURE__*/_jsx(Prompt, {
-          children: "whoami"
-        }), /*#__PURE__*/_jsx("div", {
-          style: {
-            color: 'var(--color-text-secondary)'
-          },
-          children: "pelud1n — pentester junior / red team"
-        }), /*#__PURE__*/_jsx(Prompt, {
-          children: "cat ./focus.txt"
-        }), /*#__PURE__*/_jsxs("div", {
-          style: {
-            color: 'var(--color-text)'
-          },
-          children: [/*#__PURE__*/_jsx("span", {
-            style: {
-              color: 'var(--blood-bright)'
-            },
-            children: ">"
-          }), " reconocimiento y enumeración", /*#__PURE__*/_jsx("br", {}), /*#__PURE__*/_jsx("span", {
-            style: {
-              color: 'var(--blood-bright)'
-            },
-            children: ">"
-          }), " explotación y post-explotación", /*#__PURE__*/_jsx("br", {}), /*#__PURE__*/_jsx("span", {
-            style: {
-              color: 'var(--blood-bright)'
-            },
-            children: ">"
-          }), " active directory · movimiento lateral", /*#__PURE__*/_jsx("br", {}), /*#__PURE__*/_jsx("span", {
-            style: {
-              color: 'var(--blood-bright)'
-            },
-            children: ">"
-          }), " cloud & IAM · aws/azure/gcp"]
-        }), /*#__PURE__*/_jsx(Prompt, {
-          cursor: true,
-          blink: true
-        })]
-      })]
-    })]
-  });
+    "aria-hidden": "true"
+  }, cwins.map((t, i) => /*#__PURE__*/React.createElement("div", {
+    key: t,
+    className: "cwin",
+    style: {
+      right: 30 + i * 24,
+      top: 24 + i * 30
+    }
+  }, /*#__PURE__*/React.createElement(Window, {
+    title: t,
+    inert: true
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-mono)',
+      fontSize: 12,
+      color: 'var(--color-text-tertiary)'
+    }
+  }, "pelud1n takeover //", i + 1))))), /*#__PURE__*/React.createElement("div", {
+    className: "hero-grid",
+    style: {
+      position: 'relative',
+      display: 'grid',
+      gridTemplateColumns: 'minmax(0,1fr) 440px',
+      gap: 44,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "eyebrow",
+    style: {
+      marginBottom: 20
+    }
+  }, "// seguridad ofensiva · red team"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'flex-end',
+      whiteSpace: 'nowrap'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "bigword live",
+    "data-text": "pelud1n"
+  }, "pelud", /*#__PURE__*/React.createElement("span", {
+    className: "one"
+  }, "1"), "n"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'inline-block',
+      width: 26,
+      height: 56,
+      background: 'var(--bone-pure)',
+      marginLeft: 8,
+      animation: 'peludin-blink 1.05s steps(1) infinite'
+    }
+  })), /*#__PURE__*/React.createElement(GlitchText, {
+    as: "div",
+    live: true,
+    style: {
+      fontSize: 32,
+      marginTop: 18
+    }
+  }, "ENTRA. DOCUMENTA. APRENDE."), /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: '18px 0 0',
+      maxWidth: 440,
+      fontSize: 'var(--text-body-lg)',
+      color: 'var(--color-text-secondary)',
+      lineHeight: 'var(--leading-relaxed)'
+    }
+  }, "Juan Carlos Currás Gil — operador de seguridad ofensiva, recién titulado en un Máster en hacking ético (Sobresaliente). Practico el ciclo completo de intrusión en entornos de laboratorio controlados: reconocimiento, explotación, post-explotación y documentación. Voy hacia DevSecOps."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 12,
+      flexWrap: 'wrap',
+      marginTop: 24
+    }
+  }, /*#__PURE__*/React.createElement(Button, {
+    as: "a",
+    href: "#ops",
+    glyph: ">"
+  }, "ver trabajo"), /*#__PURE__*/React.createElement(Button, {
+    as: "a",
+    href: "#contact",
+    variant: "ghost"
+  }, "contactar")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8,
+      flexWrap: 'wrap',
+      marginTop: 22
+    }
+  }, /*#__PURE__*/React.createElement(Badge, {
+    tone: "mint",
+    dot: true
+  }, "disponible"), /*#__PURE__*/React.createElement(Badge, {
+    tone: "neutral"
+  }, "eJPT"), /*#__PURE__*/React.createElement(Badge, {
+    tone: "neutral"
+  }, "ICCA"), /*#__PURE__*/React.createElement(Badge, {
+    tone: "neutral"
+  }, "MÁSTER"))), /*#__PURE__*/React.createElement(Terminal, {
+    title: "root@pelud1n: ~",
+    status: "online"
+  }, /*#__PURE__*/React.createElement(Prompt, null, "whoami"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: 'var(--color-text-secondary)'
+    }
+  }, "pelud1n — pentester junior / red team"), /*#__PURE__*/React.createElement(Prompt, null, "cat ./focus.txt"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: 'var(--color-text)'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--blood-bright)'
+    }
+  }, ">"), " reconocimiento y enumeración", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--blood-bright)'
+    }
+  }, ">"), " explotación y post-explotación", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--blood-bright)'
+    }
+  }, ">"), " active directory · movimiento lateral", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--blood-bright)'
+    }
+  }, ">"), " cloud & IAM · aws/azure/gcp"), /*#__PURE__*/React.createElement(Prompt, {
+    cursor: true,
+    blink: true
+  }))));
 }
 function Stats() {
   const {
@@ -3731,50 +3688,46 @@ function Stats() {
     violet: 'var(--bruise)',
     red: 'var(--blood)'
   };
-  return /*#__PURE__*/_jsx("section", {
+  return /*#__PURE__*/React.createElement("section", {
     style: {
       maxWidth: 1180,
       margin: '0 auto',
       padding: '8px 24px 16px'
-    },
-    children: /*#__PURE__*/_jsx("div", {
-      className: "stats-grid",
-      style: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4,1fr)',
-        gap: 14,
-        borderTop: '1px solid var(--color-border-strong)',
-        paddingTop: 26
-      },
-      children: stats.map(s => /*#__PURE__*/_jsxs(CornerFrame, {
-        color: s.c,
-        style: {
-          padding: '16px 18px'
-        },
-        children: [/*#__PURE__*/_jsx("div", {
-          style: {
-            fontFamily: 'var(--font-display)',
-            fontWeight: 900,
-            fontStyle: 'italic',
-            fontSize: 42,
-            lineHeight: 1,
-            color: col[s.c]
-          },
-          children: s.n
-        }), /*#__PURE__*/_jsx("div", {
-          style: {
-            marginTop: 8,
-            fontFamily: 'var(--font-pixel)',
-            fontSize: 10,
-            letterSpacing: '.06em',
-            textTransform: 'uppercase',
-            color: 'var(--color-text-tertiary)'
-          },
-          children: s.label
-        })]
-      }, s.label))
-    })
-  });
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stats-grid",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4,1fr)',
+      gap: 14,
+      borderTop: '1px solid var(--color-border-strong)',
+      paddingTop: 26
+    }
+  }, stats.map(s => /*#__PURE__*/React.createElement(CornerFrame, {
+    key: s.label,
+    color: s.c,
+    style: {
+      padding: '16px 18px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 900,
+      fontStyle: 'italic',
+      fontSize: 42,
+      lineHeight: 1,
+      color: col[s.c]
+    }
+  }, s.n), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8,
+      fontFamily: 'var(--font-pixel)',
+      fontSize: 10,
+      letterSpacing: '.06em',
+      textTransform: 'uppercase',
+      color: 'var(--color-text-tertiary)'
+    }
+  }, s.label)))));
 }
 function SiteFooter() {
   const {
@@ -3793,70 +3746,64 @@ function SiteFooter() {
     l: 'ICCA',
     href: 'https://certs.ine.com/3d3f1254-0dc8-400f-a6cf-6e017b60fa42'
   }];
-  return /*#__PURE__*/_jsx("footer", {
+  return /*#__PURE__*/React.createElement("footer", {
     style: {
       borderTop: '1px solid var(--color-border-strong)',
       background: 'var(--color-bg-elevated)',
       marginTop: 40
-    },
-    children: /*#__PURE__*/_jsxs("div", {
-      style: {
-        maxWidth: 1180,
-        margin: '0 auto',
-        padding: '30px 24px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 20,
-        flexWrap: 'wrap'
-      },
-      children: [/*#__PURE__*/_jsxs("div", {
-        style: {
-          display: 'flex',
-          alignItems: 'center',
-          gap: 14
-        },
-        children: [/*#__PURE__*/_jsx(Logo, {
-          variant: "mark"
-        }), /*#__PURE__*/_jsx("span", {
-          style: {
-            fontFamily: 'var(--font-pixel)',
-            fontSize: 10,
-            letterSpacing: '.06em',
-            textTransform: 'uppercase',
-            color: 'var(--color-text-tertiary)'
-          },
-          children: "cífralo todo · no confíes en nada"
-        })]
-      }), /*#__PURE__*/_jsx("nav", {
-        style: {
-          display: 'flex',
-          gap: 16
-        },
-        children: links.map(it => /*#__PURE__*/_jsx("a", {
-          href: it.href,
-          target: "_blank",
-          rel: "noopener noreferrer",
-          style: {
-            fontFamily: 'var(--font-pixel)',
-            fontSize: 10,
-            textTransform: 'uppercase',
-            letterSpacing: '.04em',
-            color: 'var(--color-text-secondary)',
-            textDecoration: 'none'
-          },
-          children: it.l
-        }, it.l))
-      }), /*#__PURE__*/_jsx("span", {
-        style: {
-          fontFamily: 'var(--font-mono)',
-          fontSize: 11,
-          color: 'var(--color-text-tertiary)'
-        },
-        children: "© 2026 pelud1n"
-      })]
-    })
-  });
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1180,
+      margin: '0 auto',
+      padding: '30px 24px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 20,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 14
+    }
+  }, /*#__PURE__*/React.createElement(Logo, {
+    variant: "mark"
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-pixel)',
+      fontSize: 10,
+      letterSpacing: '.06em',
+      textTransform: 'uppercase',
+      color: 'var(--color-text-tertiary)'
+    }
+  }, "cífralo todo · no confíes en nada")), /*#__PURE__*/React.createElement("nav", {
+    style: {
+      display: 'flex',
+      gap: 16
+    }
+  }, links.map(it => /*#__PURE__*/React.createElement("a", {
+    key: it.l,
+    href: it.href,
+    target: "_blank",
+    rel: "noopener noreferrer",
+    style: {
+      fontFamily: 'var(--font-pixel)',
+      fontSize: 10,
+      textTransform: 'uppercase',
+      letterSpacing: '.04em',
+      color: 'var(--color-text-secondary)',
+      textDecoration: 'none'
+    }
+  }, it.l))), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-mono)',
+      fontSize: 11,
+      color: 'var(--color-text-tertiary)'
+    }
+  }, "© 2026 pelud1n")));
 }
 Object.assign(window, {
   TopBar,
@@ -3865,8 +3812,7 @@ Object.assign(window, {
   Stats,
   SiteFooter
 });</script>
-<script>import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
-/* peludin_site — content panels: ops · notes · arsenal · contact */
+<script>/* peludin_site — content panels: ops · notes · arsenal · contact */
 const DSP = window.Pelud1nDesignSystem_5024cb;
 function SectionHead({
   n,
@@ -3876,22 +3822,18 @@ function SectionHead({
   const {
     GlitchText
   } = DSP;
-  return /*#__PURE__*/_jsxs(React.Fragment, {
-    children: [/*#__PURE__*/_jsxs("div", {
-      className: "eyebrow",
-      style: {
-        marginBottom: 8
-      },
-      children: ["// ", n, " · ", file]
-    }), /*#__PURE__*/_jsx(GlitchText, {
-      as: "h2",
-      style: {
-        fontSize: 40,
-        margin: '0 0 22px'
-      },
-      children: title
-    })]
-  });
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "eyebrow",
+    style: {
+      marginBottom: 8
+    }
+  }, "// ", n, " · ", file), /*#__PURE__*/React.createElement(GlitchText, {
+    as: "h2",
+    style: {
+      fontSize: 40,
+      margin: '0 0 22px'
+    }
+  }, title));
 }
 function Ops() {
   const {
@@ -3963,102 +3905,90 @@ function Ops() {
     label: 'red team'
   }];
   const shown = filter === 'all' ? items : items.filter(i => i.cat === filter);
-  return /*#__PURE__*/_jsxs("section", {
+  return /*#__PURE__*/React.createElement("section", {
     id: "ops",
     style: {
       maxWidth: 1180,
       margin: '0 auto',
       padding: '56px 24px'
-    },
-    children: [/*#__PURE__*/_jsx(SectionHead, {
-      n: "01",
-      file: "ops.log",
-      title: "LABORATORIO & CTF"
-    }), /*#__PURE__*/_jsxs(Window, {
-      title: "ops.log — pelud1n",
-      block: true,
-      children: [/*#__PURE__*/_jsx("div", {
-        style: {
-          marginBottom: 16
-        },
-        children: /*#__PURE__*/_jsx(Tabs, {
-          items: tabs,
-          value: filter,
-          onChange: setFilter
-        })
-      }), /*#__PURE__*/_jsx("div", {
-        className: "ops-grid",
-        style: {
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          gap: 14
-        },
-        children: shown.map(it => /*#__PURE__*/_jsxs(Card, {
-          ticks: true,
-          padding: "md",
-          style: {
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 11,
-            minHeight: 168
-          },
-          children: [/*#__PURE__*/_jsxs("div", {
-            style: {
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            },
-            children: [/*#__PURE__*/_jsxs("span", {
-              style: {
-                fontFamily: 'var(--font-pixel)',
-                fontSize: 9,
-                letterSpacing: '.06em',
-                textTransform: 'uppercase',
-                color: 'var(--color-text-tertiary)'
-              },
-              children: [it.cat, " · ", it.year]
-            }), /*#__PURE__*/_jsx(Badge, {
-              tone: "mint",
-              children: "lab"
-            })]
-          }), /*#__PURE__*/_jsx("h3", {
-            style: {
-              margin: 0,
-              fontFamily: 'var(--font-display)',
-              fontWeight: 800,
-              fontStyle: 'italic',
-              textTransform: 'uppercase',
-              fontSize: 22,
-              color: 'var(--color-text)',
-              lineHeight: 1
-            },
-            children: it.name
-          }), /*#__PURE__*/_jsx("p", {
-            style: {
-              margin: 0,
-              fontSize: 'var(--text-body-sm)',
-              lineHeight: 'var(--leading-normal)',
-              color: 'var(--color-text-secondary)',
-              flex: 1
-            },
-            children: it.summary
-          }), /*#__PURE__*/_jsxs("div", {
-            style: {
-              display: 'flex',
-              gap: 8
-            },
-            children: [/*#__PURE__*/_jsx(Badge, {
-              tone: "neutral",
-              children: it.t1
-            }), /*#__PURE__*/_jsx(Badge, {
-              tone: "neutral",
-              children: it.t2
-            })]
-          })]
-        }, it.name))
-      })]
-    })]
-  });
+    }
+  }, /*#__PURE__*/React.createElement(SectionHead, {
+    n: "01",
+    file: "ops.log",
+    title: "LABORATORIO & CTF"
+  }), /*#__PURE__*/React.createElement(Window, {
+    title: "ops.log — pelud1n",
+    block: true
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement(Tabs, {
+    items: tabs,
+    value: filter,
+    onChange: setFilter
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "ops-grid",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+      gap: 14
+    }
+  }, shown.map(it => /*#__PURE__*/React.createElement(Card, {
+    key: it.name,
+    ticks: true,
+    padding: "md",
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 11,
+      minHeight: 168
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-pixel)',
+      fontSize: 9,
+      letterSpacing: '.06em',
+      textTransform: 'uppercase',
+      color: 'var(--color-text-tertiary)'
+    }
+  }, it.cat, " · ", it.year), /*#__PURE__*/React.createElement(Badge, {
+    tone: "mint"
+  }, "lab")), /*#__PURE__*/React.createElement("h3", {
+    style: {
+      margin: 0,
+      fontFamily: 'var(--font-display)',
+      fontWeight: 800,
+      fontStyle: 'italic',
+      textTransform: 'uppercase',
+      fontSize: 22,
+      color: 'var(--color-text)',
+      lineHeight: 1
+    }
+  }, it.name), /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: 0,
+      fontSize: 'var(--text-body-sm)',
+      lineHeight: 'var(--leading-normal)',
+      color: 'var(--color-text-secondary)',
+      flex: 1
+    }
+  }, it.summary), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement(Badge, {
+    tone: "neutral"
+  }, it.t1), /*#__PURE__*/React.createElement(Badge, {
+    tone: "neutral"
+  }, it.t2)))))));
 }
 function Notes() {
   const {
@@ -4094,95 +4024,84 @@ function Notes() {
     date: 'próximamente',
     read: 'pronto'
   }];
-  return /*#__PURE__*/_jsxs("section", {
+  return /*#__PURE__*/React.createElement("section", {
     id: "notes",
     style: {
       maxWidth: 1040,
       margin: '0 auto',
       padding: '56px 24px'
+    }
+  }, /*#__PURE__*/React.createElement(SectionHead, {
+    n: "02",
+    file: "writeups/",
+    title: "WRITEUPS"
+  }), /*#__PURE__*/React.createElement(Window, {
+    title: "writeups/ — pelud1n",
+    block: true
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column'
+    }
+  }, posts.map((p, i) => /*#__PURE__*/React.createElement("a", {
+    key: p.title,
+    href: "#",
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 16,
+      padding: '14px 8px',
+      textDecoration: 'none',
+      borderTop: i ? '1px solid var(--color-border)' : 'none',
+      color: 'inherit'
     },
-    children: [/*#__PURE__*/_jsx(SectionHead, {
-      n: "02",
-      file: "writeups/",
-      title: "WRITEUPS"
-    }), /*#__PURE__*/_jsx(Window, {
-      title: "writeups/ — pelud1n",
-      block: true,
-      children: /*#__PURE__*/_jsx("div", {
-        style: {
-          display: 'flex',
-          flexDirection: 'column'
-        },
-        children: posts.map((p, i) => /*#__PURE__*/_jsxs("a", {
-          href: "#",
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            gap: 16,
-            padding: '14px 8px',
-            textDecoration: 'none',
-            borderTop: i ? '1px solid var(--color-border)' : 'none',
-            color: 'inherit'
-          },
-          onMouseEnter: e => e.currentTarget.style.background = 'var(--color-surface-hover)',
-          onMouseLeave: e => e.currentTarget.style.background = 'transparent',
-          children: [/*#__PURE__*/_jsx(Badge, {
-            tone: p.tone,
-            style: {
-              minWidth: 70,
-              justifyContent: 'center'
-            },
-            children: p.plat
-          }), /*#__PURE__*/_jsxs("div", {
-            style: {
-              flex: 1,
-              minWidth: 0
-            },
-            children: [/*#__PURE__*/_jsx("div", {
-              style: {
-                fontFamily: 'var(--font-mono)',
-                fontSize: 15,
-                fontWeight: 600,
-                color: 'var(--color-text)'
-              },
-              children: p.title
-            }), /*#__PURE__*/_jsx("div", {
-              style: {
-                display: 'flex',
-                gap: 9,
-                marginTop: 4
-              },
-              children: p.tags.map(t => /*#__PURE__*/_jsxs("span", {
-                style: {
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 11,
-                  color: 'var(--color-text-tertiary)'
-                },
-                children: ["#", t]
-              }, t))
-            })]
-          }), /*#__PURE__*/_jsxs("div", {
-            style: {
-              textAlign: 'right',
-              fontFamily: 'var(--font-mono)',
-              fontSize: 11,
-              color: 'var(--color-text-tertiary)',
-              whiteSpace: 'nowrap'
-            },
-            children: [/*#__PURE__*/_jsx("div", {
-              children: p.date
-            }), /*#__PURE__*/_jsxs("div", {
-              style: {
-                marginTop: 3,
-                color: 'var(--blood-bright)'
-              },
-              children: [p.read, " →"]
-            })]
-          })]
-        }, p.title))
-      })
-    })]
-  });
+    onMouseEnter: e => e.currentTarget.style.background = 'var(--color-surface-hover)',
+    onMouseLeave: e => e.currentTarget.style.background = 'transparent'
+  }, /*#__PURE__*/React.createElement(Badge, {
+    tone: p.tone,
+    style: {
+      minWidth: 70,
+      justifyContent: 'center'
+    }
+  }, p.plat), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      minWidth: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-mono)',
+      fontSize: 15,
+      fontWeight: 600,
+      color: 'var(--color-text)'
+    }
+  }, p.title), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 9,
+      marginTop: 4
+    }
+  }, p.tags.map(t => /*#__PURE__*/React.createElement("span", {
+    key: t,
+    style: {
+      fontFamily: 'var(--font-mono)',
+      fontSize: 11,
+      color: 'var(--color-text-tertiary)'
+    }
+  }, "#", t)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'right',
+      fontFamily: 'var(--font-mono)',
+      fontSize: 11,
+      color: 'var(--color-text-tertiary)',
+      whiteSpace: 'nowrap'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, p.date), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 3,
+      color: 'var(--blood-bright)'
+    }
+  }, p.read, " →")))))));
 }
 function Arsenal() {
   const {
@@ -4207,78 +4126,72 @@ function Arsenal() {
     phase: 'entorno & docs',
     tools: ['Kali Linux', 'Bash', 'Markdown', 'CVSS']
   }];
-  return /*#__PURE__*/_jsxs("section", {
+  return /*#__PURE__*/React.createElement("section", {
     id: "arsenal",
     style: {
       maxWidth: 1180,
       margin: '0 auto',
       padding: '56px 24px'
-    },
-    children: [/*#__PURE__*/_jsx(SectionHead, {
-      n: "03",
-      file: "arsenal.sys",
-      title: "HERRAMIENTAS"
-    }), /*#__PURE__*/_jsx(Window, {
-      title: "arsenal.sys — pelud1n",
-      block: true,
-      children: /*#__PURE__*/_jsx("div", {
-        style: {
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-          gap: 16
-        },
-        children: groups.map(g => /*#__PURE__*/_jsxs("div", {
-          style: {
-            border: '1px solid var(--color-border)',
-            padding: '14px 15px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 12
-          },
-          children: [/*#__PURE__*/_jsxs("div", {
-            style: {
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8
-            },
-            children: [/*#__PURE__*/_jsx("span", {
-              style: {
-                width: 7,
-                height: 7,
-                background: 'var(--blood)'
-              }
-            }), /*#__PURE__*/_jsx("span", {
-              style: {
-                fontFamily: 'var(--font-pixel)',
-                fontSize: 10,
-                letterSpacing: '.06em',
-                textTransform: 'uppercase',
-                color: 'var(--color-text)'
-              },
-              children: g.phase
-            })]
-          }), /*#__PURE__*/_jsx("div", {
-            style: {
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 7
-            },
-            children: g.tools.map(t => /*#__PURE__*/_jsx("span", {
-              style: {
-                fontFamily: 'var(--font-mono)',
-                fontSize: 13,
-                color: 'var(--color-text-secondary)',
-                background: 'var(--color-surface-inset)',
-                border: '1px solid var(--color-border)',
-                padding: '4px 9px'
-              },
-              children: t
-            }, t))
-          })]
-        }, g.phase))
-      })
-    })]
-  });
+    }
+  }, /*#__PURE__*/React.createElement(SectionHead, {
+    n: "03",
+    file: "arsenal.sys",
+    title: "HERRAMIENTAS"
+  }), /*#__PURE__*/React.createElement(Window, {
+    title: "arsenal.sys — pelud1n",
+    block: true
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+      gap: 16
+    }
+  }, groups.map(g => /*#__PURE__*/React.createElement("div", {
+    key: g.phase,
+    style: {
+      border: '1px solid var(--color-border)',
+      padding: '14px 15px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 7,
+      height: 7,
+      background: 'var(--blood)'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-pixel)',
+      fontSize: 10,
+      letterSpacing: '.06em',
+      textTransform: 'uppercase',
+      color: 'var(--color-text)'
+    }
+  }, g.phase)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 7
+    }
+  }, g.tools.map(t => /*#__PURE__*/React.createElement("span", {
+    key: t,
+    style: {
+      fontFamily: 'var(--font-mono)',
+      fontSize: 13,
+      color: 'var(--color-text-secondary)',
+      background: 'var(--color-surface-inset)',
+      border: '1px solid var(--color-border)',
+      padding: '4px 9px'
+    }
+  }, t))))))));
 }
 function Contact() {
   const {
@@ -4298,157 +4211,132 @@ function Contact() {
     ...form,
     [k]: e.target.value
   });
-  return /*#__PURE__*/_jsxs("section", {
+  return /*#__PURE__*/React.createElement("section", {
     id: "contact",
     style: {
       maxWidth: 1180,
       margin: '0 auto',
       padding: '56px 24px 24px'
+    }
+  }, /*#__PURE__*/React.createElement(SectionHead, {
+    n: "04",
+    file: "./contacto",
+    title: "CONTACTO"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "hero-grid",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '380px minmax(0,1fr)',
+      gap: 28,
+      alignItems: 'start'
+    }
+  }, /*#__PURE__*/React.createElement(Window, {
+    title: "PELUD1N://TAKEOVER",
+    icon: true,
+    block: true,
+    actions: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Button, {
+      variant: "ghost",
+      size: "sm"
+    }, "no"), /*#__PURE__*/React.createElement(Button, {
+      variant: "ghost",
+      size: "sm"
+    }, "no"), /*#__PURE__*/React.createElement(Button, {
+      size: "sm"
+    }, "hablemos"))
+  }, "buscas talento en", /*#__PURE__*/React.createElement("br", null), "seguridad ofensiva?"), /*#__PURE__*/React.createElement(Terminal, {
+    title: "root@pelud1n: ~/contacto",
+    status: sent ? 'sent' : 'open'
+  }, /*#__PURE__*/React.createElement(Prompt, null, "./connect --secure"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: 'var(--color-text-secondary)',
+      marginBottom: 6
+    }
+  }, "linkedin.com/in/pelud1n · github.com/jail3d · respondo pronto"), sent ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 6,
+      padding: '6px 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--blood-bright)'
+    }
+  }, "[ok]"), " paquete recibido de ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--bone-pure)'
+    }
+  }, form.handle || 'anon')), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: 'var(--color-text-secondary)'
+    }
+  }, "te respondo por LinkedIn o a ", form.email || 'tu correo', "."), /*#__PURE__*/React.createElement(Prompt, {
+    cursor: true,
+    blink: true
+  })) : /*#__PURE__*/React.createElement("form", {
+    onSubmit: e => {
+      e.preventDefault();
+      setSent(true);
     },
-    children: [/*#__PURE__*/_jsx(SectionHead, {
-      n: "04",
-      file: "./contacto",
-      title: "CONTACTO"
-    }), /*#__PURE__*/_jsxs("div", {
-      className: "hero-grid",
-      style: {
-        display: 'grid',
-        gridTemplateColumns: '380px minmax(0,1fr)',
-        gap: 28,
-        alignItems: 'start'
-      },
-      children: [/*#__PURE__*/_jsxs(Window, {
-        title: "PELUD1N://TAKEOVER",
-        icon: true,
-        block: true,
-        actions: /*#__PURE__*/_jsxs(React.Fragment, {
-          children: [/*#__PURE__*/_jsx(Button, {
-            variant: "ghost",
-            size: "sm",
-            children: "no"
-          }), /*#__PURE__*/_jsx(Button, {
-            variant: "ghost",
-            size: "sm",
-            children: "no"
-          }), /*#__PURE__*/_jsx(Button, {
-            size: "sm",
-            children: "hablemos"
-          })]
-        }),
-        children: ["buscas talento en", /*#__PURE__*/_jsx("br", {}), "seguridad ofensiva?"]
-      }), /*#__PURE__*/_jsxs(Terminal, {
-        title: "root@pelud1n: ~/contacto",
-        status: sent ? 'sent' : 'open',
-        children: [/*#__PURE__*/_jsx(Prompt, {
-          children: "./connect --secure"
-        }), /*#__PURE__*/_jsx("div", {
-          style: {
-            color: 'var(--color-text-secondary)',
-            marginBottom: 6
-          },
-          children: "linkedin.com/in/pelud1n · github.com/jail3d · respondo pronto"
-        }), sent ? /*#__PURE__*/_jsxs("div", {
-          style: {
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 6,
-            padding: '6px 0'
-          },
-          children: [/*#__PURE__*/_jsxs("div", {
-            children: [/*#__PURE__*/_jsx("span", {
-              style: {
-                color: 'var(--blood-bright)'
-              },
-              children: "[ok]"
-            }), " paquete recibido de ", /*#__PURE__*/_jsx("span", {
-              style: {
-                color: 'var(--bone-pure)'
-              },
-              children: form.handle || 'anon'
-            })]
-          }), /*#__PURE__*/_jsxs("div", {
-            style: {
-              color: 'var(--color-text-secondary)'
-            },
-            children: ["te respondo por LinkedIn o a ", form.email || 'tu correo', "."]
-          }), /*#__PURE__*/_jsx(Prompt, {
-            cursor: true,
-            blink: true
-          })]
-        }) : /*#__PURE__*/_jsxs("form", {
-          onSubmit: e => {
-            e.preventDefault();
-            setSent(true);
-          },
-          style: {
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 13,
-            paddingTop: 8
-          },
-          children: [/*#__PURE__*/_jsxs("div", {
-            style: {
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: 13
-            },
-            children: [/*#__PURE__*/_jsx(Input, {
-              label: "alias",
-              prefix: "$",
-              placeholder: "tu nombre",
-              value: form.handle,
-              onChange: set('handle')
-            }), /*#__PURE__*/_jsx(Input, {
-              label: "email",
-              prefix: "@",
-              type: "email",
-              placeholder: "tu@dominio.com",
-              value: form.email,
-              onChange: set('email')
-            })]
-          }), /*#__PURE__*/_jsxs("label", {
-            style: {
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 7
-            },
-            children: [/*#__PURE__*/_jsx("span", {
-              style: {
-                fontFamily: 'var(--font-pixel)',
-                fontSize: 10,
-                letterSpacing: '.04em',
-                textTransform: 'uppercase',
-                color: 'var(--color-text-secondary)'
-              },
-              children: "mensaje"
-            }), /*#__PURE__*/_jsx("textarea", {
-              rows: "3",
-              placeholder: "puesto, equipo, en qué trabajáis...",
-              value: form.msg,
-              onChange: set('msg'),
-              style: {
-                background: 'var(--color-surface-inset)',
-                border: '1px solid var(--color-border-strong)',
-                borderRadius: 0,
-                padding: '10px 12px',
-                resize: 'vertical',
-                fontFamily: 'var(--font-mono)',
-                fontSize: 'var(--text-body-sm)',
-                color: 'var(--color-text)',
-                outline: 'none'
-              }
-            })]
-          }), /*#__PURE__*/_jsx("div", {
-            children: /*#__PURE__*/_jsx(Button, {
-              type: "submit",
-              glyph: ">",
-              children: "enviar"
-            })
-          })]
-        })]
-      })]
-    })]
-  });
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 13,
+      paddingTop: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 13
+    }
+  }, /*#__PURE__*/React.createElement(Input, {
+    label: "alias",
+    prefix: "$",
+    placeholder: "tu nombre",
+    value: form.handle,
+    onChange: set('handle')
+  }), /*#__PURE__*/React.createElement(Input, {
+    label: "email",
+    prefix: "@",
+    type: "email",
+    placeholder: "tu@dominio.com",
+    value: form.email,
+    onChange: set('email')
+  })), /*#__PURE__*/React.createElement("label", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 7
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-pixel)',
+      fontSize: 10,
+      letterSpacing: '.04em',
+      textTransform: 'uppercase',
+      color: 'var(--color-text-secondary)'
+    }
+  }, "mensaje"), /*#__PURE__*/React.createElement("textarea", {
+    rows: "3",
+    placeholder: "puesto, equipo, en qué trabajáis...",
+    value: form.msg,
+    onChange: set('msg'),
+    style: {
+      background: 'var(--color-surface-inset)',
+      border: '1px solid var(--color-border-strong)',
+      borderRadius: 0,
+      padding: '10px 12px',
+      resize: 'vertical',
+      fontFamily: 'var(--font-mono)',
+      fontSize: 'var(--text-body-sm)',
+      color: 'var(--color-text)',
+      outline: 'none'
+    }
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
+    type: "submit",
+    glyph: ">"
+  }, "enviar"))))));
 }
 Object.assign(window, {
   Ops,
@@ -4456,8 +4344,7 @@ Object.assign(window, {
   Arsenal,
   Contact
 });</script>
-<script>import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-const SECTIONS = [{
+<script>const SECTIONS = [{
   id: 'ops',
   label: 'labs'
 }, {
@@ -4488,13 +4375,11 @@ function App() {
     });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-  return /*#__PURE__*/_jsxs(React.Fragment, {
-    children: [/*#__PURE__*/_jsx(TopBar, {
-      sections: SECTIONS,
-      active: active
-    }), /*#__PURE__*/_jsx(Ticker, {}), /*#__PURE__*/_jsx(Hero, {}), /*#__PURE__*/_jsx(Stats, {}), /*#__PURE__*/_jsx(Ops, {}), /*#__PURE__*/_jsx(Notes, {}), /*#__PURE__*/_jsx(Arsenal, {}), /*#__PURE__*/_jsx(Contact, {}), /*#__PURE__*/_jsx(SiteFooter, {})]
-  });
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(TopBar, {
+    sections: SECTIONS,
+    active: active
+  }), /*#__PURE__*/React.createElement(Ticker, null), /*#__PURE__*/React.createElement(Hero, null), /*#__PURE__*/React.createElement(Stats, null), /*#__PURE__*/React.createElement(Ops, null), /*#__PURE__*/React.createElement(Notes, null), /*#__PURE__*/React.createElement(Arsenal, null), /*#__PURE__*/React.createElement(Contact, null), /*#__PURE__*/React.createElement(SiteFooter, null));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/_jsx(App, {}));</script>
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));</script>
 </body>
 </html>
