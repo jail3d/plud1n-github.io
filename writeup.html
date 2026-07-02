@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pelud1n — writeup</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Saira+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,800;1,900&family=Saira:wght@400;500;600;700&family=VT323&family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* ============================================================
+   pelud1n — COLOR TOKENS  ·  DEDSEC-style rework
+   Black + bone + muted blood red. Solid, dark, 1-bit, NO neon.
+   Desaturated olive + bruise-purple are GLITCH accents only.
+
+   Token NAMES are preserved from the previous system on purpose:
+   old --mint/--violet/--slate/--glow references are remapped at the
+   bottom so the whole kit recolors automatically (mint→blood,
+   violet→bruise, glows→off). Author NEW work against the named
+   tokens below (--blood, --bone, --ink, --toxic, --bruise).
+   ============================================================ */
+:root {
+  /* ---- INK — neutral, faintly-warm near-black ramp ----------- */
+  --ink-1000: #050506;
+  --ink-950:  #0A0A0B;   /* app background            */
+  --ink-900:  #0F0F11;   /* elevated background       */
+  --ink-850:  #141416;   /* surface / card            */
+  --ink-800:  #1B1B1E;   /* surface hover             */
+  --ink-750:  #232327;   /* surface active / inset    */
+  --ink-700:  #2D2D32;   /* hairline strong           */
+  --ink-600:  #3B3B42;   /* divider strong            */
+  --ink-500:  #4F4F58;   /* disabled stroke           */
+  --ink-400:  #6B6B75;   /* text tertiary / icon dim  */
+  --ink-300:  #8A8A94;
+
+  /* ---- BONE — warm off-white (the "white" of the 1-bit art) -- */
+  --bone-050: #ECE7DB;   /* primary text              */
+  --bone-100: #D9D3C5;
+  --bone-200: #B7B1A1;
+  --bone-300: #8F897B;   /* secondary text            */
+  --bone-400: #6C6759;   /* tertiary text             */
+  --bone-pure:#F4F1E9;   /* max-contrast highlight    */
+
+  /* ---- BLOOD — primary signal (muted, solid, not neon) ------- */
+  --blood-bright: #D8333F;   /* hover / active edge   */
+  --blood:        #B5202C;   /* base accent           */
+  --blood-deep:   #7C1620;   /* pressed / shadow       */
+  --blood-dark:   #4E0E15;   /* deepest fill           */
+  --blood-soft:   rgba(181, 32, 44, 0.16);
+  --blood-line:   rgba(181, 32, 44, 0.55);
+
+  /* ---- Glitch accents — DESATURATED, used sparingly ---------- */
+  --toxic:      #7E8A55;     /* dithered olive / sage  */
+  --toxic-soft: rgba(126, 138, 85, 0.16);
+  --toxic-line: rgba(126, 138, 85, 0.5);
+  --bruise:      #6E5F84;    /* muted purple           */
+  --bruise-soft: rgba(110, 95, 132, 0.18);
+  --bruise-line: rgba(110, 95, 132, 0.5);
+  --rust:    #B5532A;        /* high severity          */
+  --mustard: #C49A3C;        /* medium severity        */
+
+  /* ============================================================
+     SEMANTIC ALIASES — reference these in product code.
+     ============================================================ */
+  --color-bg:            var(--ink-950);
+  --color-bg-elevated:   var(--ink-900);
+  --color-surface:       var(--ink-850);
+  --color-surface-hover: var(--ink-800);
+  --color-surface-active:var(--ink-750);
+  --color-surface-inset: var(--ink-1000);
+
+  --color-text:          var(--bone-050);
+  --color-text-secondary:var(--bone-300);
+  --color-text-tertiary: var(--bone-400);
+  --color-text-disabled: var(--ink-500);
+  --color-text-on-accent:var(--bone-pure);   /* on blood fill */
+  --color-text-on-bone:  var(--ink-1000);    /* on bone fill  */
+
+  --color-border:        rgba(236, 231, 219, 0.12);
+  --color-border-strong: rgba(236, 231, 219, 0.22);
+  --color-border-faint:  rgba(236, 231, 219, 0.06);
+
+  --color-accent:        var(--blood);
+  --color-accent-hover:  var(--blood-bright);
+  --color-accent-press:  var(--blood-deep);
+  --color-accent-2:      var(--bone-050);     /* bone = high-contrast 2nd accent */
+  --color-danger:        var(--blood-bright);
+
+  --color-link:          var(--blood-bright);
+  --color-link-hover:    var(--bone-pure);
+
+  --color-selection:     rgba(181, 32, 44, 0.42);
+  --color-focus:         var(--blood-bright);
+
+  /* ---- Severity / status (gritty, muted) -------------------- */
+  --sev-critical: var(--blood-bright);
+  --sev-high:     var(--rust);
+  --sev-medium:   var(--mustard);
+  --sev-low:      var(--toxic);
+  --sev-info:     var(--bruise);
+  --sev-critical-soft: var(--blood-soft);
+  --sev-high-soft:     rgba(181, 83, 42, 0.16);
+  --sev-medium-soft:   rgba(196, 154, 60, 0.16);
+  --sev-low-soft:      var(--toxic-soft);
+  --sev-info-soft:     var(--bruise-soft);
+
+  /* ============================================================
+     BACKWARD-COMPAT REMAPS — keep old files on-palette.
+     (mint → blood, violet → bruise, slate → ink, glows → off)
+     ============================================================ */
+  --slate-1000: var(--ink-1000); --slate-950: var(--ink-950); --slate-900: var(--ink-900);
+  --slate-850: var(--ink-850);  --slate-800: var(--ink-800); --slate-750: var(--ink-750);
+  --slate-700: var(--ink-700);  --slate-600: var(--ink-600); --slate-500: var(--ink-500);
+  --slate-400: var(--ink-400);  --slate-300: var(--bone-300); --slate-200: var(--bone-200);
+  --slate-100: var(--bone-100); --slate-050: var(--bone-050);
+
+  --mint-bright: var(--blood-bright); --mint: var(--blood); --mint-deep: var(--blood-deep);
+  --mint-soft: var(--blood-soft); --mint-line: var(--blood-line); --mint-glow: transparent;
+
+  --violet-bright: #8A79A0; --violet: var(--bruise); --violet-deep: #574A68;
+  --violet-soft: var(--bruise-soft); --violet-line: var(--bruise-line); --violet-glow: transparent;
+
+  --red-bright: var(--blood-bright); --red: var(--blood); --red-deep: var(--blood-deep);
+  --red-soft: var(--blood-soft); --red-line: var(--blood-line); --red-glow: transparent;
+}
+
+/* ============================================================
+   pelud1n — TYPOGRAPHY TOKENS  ·  DEDSEC-style rework
+   Pixel voice (Silkscreen) + condensed slogans (Saira Condensed)
+   + BBS terminal (VT323) + mono (JetBrains) + body (Saira).
+   ============================================================ */
+:root {
+  /* ---- Families ---------------------------------------------- */
+  --font-pixel:    'Silkscreen', 'JetBrains Mono', ui-monospace, monospace;
+  --font-display:  'Saira Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --font-terminal: 'VT323', 'JetBrains Mono', ui-monospace, monospace;
+  --font-mono:     'JetBrains Mono', ui-monospace, 'DejaVu Sans Mono', monospace;
+  --font-sans:     'Saira', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* ---- Weights ----------------------------------------------- */
+  --weight-regular:   400;
+  --weight-medium:    500;
+  --weight-semibold:  600;
+  --weight-bold:      700;
+  --weight-extrabold: 800;
+  --weight-black:     900;
+
+  /* ---- Display scale (Saira Condensed — runs big & tight) ---- */
+  --text-display-2xl: 116px;
+  --text-display-xl:  84px;
+  --text-display-lg:  60px;
+  --text-display-md:  42px;
+  --text-display-sm:  30px;
+
+  /* ---- Pixel scale (Silkscreen — keep multiples for crisp px) */
+  --text-pixel-lg: 32px;
+  --text-pixel-md: 20px;
+  --text-pixel-sm: 14px;
+  --text-pixel-xs: 10px;   /* HUD micro labels, window titles */
+
+  /* ---- Text / body scale (Saira) ----------------------------- */
+  --text-heading:  20px;
+  --text-body-lg:  18px;
+  --text-body:     15px;
+  --text-body-sm:  13px;
+  --text-caption:  12px;
+  --text-micro:    11px;
+
+  /* ---- Line heights ------------------------------------------ */
+  --leading-none:    1;
+  --leading-tight:   1.05;
+  --leading-snug:    1.25;
+  --leading-normal:  1.55;
+  --leading-relaxed: 1.7;
+
+  /* ---- Letter spacing ---------------------------------------- */
+  --tracking-tighter: -0.04em;
+  --tracking-tight:   -0.02em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.04em;
+  --tracking-wider:   0.10em;
+  --tracking-widest:  0.20em;   /* pixel / HUD labels */
+}
+
+/* ============================================================
+   pelud1n — SPACING & LAYOUT TOKENS
+   4px base grid — keeps everything aligned to the rejilla.
+   ============================================================ */
+:root {
+  --space-0:   0;
+  --space-px:  1px;
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-7:   28px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-14:  56px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+  --space-32:  128px;
+  --space-40:  160px;
+
+  /* ---- Layout ------------------------------------------------ */
+  --container-sm:  640px;
+  --container-md:  840px;
+  --container-lg:  1080px;
+  --container-xl:  1280px;
+  --gutter:        24px;
+  --section-y:     96px;   /* vertical rhythm between page sections */
+
+  /* ---- Control sizing (height of buttons, inputs, etc.) ------ */
+  --control-sm: 30px;
+  --control-md: 38px;
+  --control-lg: 46px;
+}
+
+/* ============================================================
+   pelud1n — EFFECTS TOKENS  ·  DEDSEC-style rework
+   Sharp/pixel corners, hard 1-bit shadows, dither + scanlines +
+   halftone textures, glitch splits. NO neon glow (kept as no-ops).
+   ============================================================ */
+:root {
+  /* ---- Radii — pixel/stencil: mostly square ------------------ */
+  --radius-none: 0;
+  --radius-sm:   1px;
+  --radius-md:   2px;
+  --radius-lg:   3px;
+  --radius-xl:   4px;
+  --radius-pill: 999px;
+
+  /* ---- Border widths ----------------------------------------- */
+  --border-hairline: 1px;
+  --border-thick:    2px;
+  --border-heavy:    3px;
+
+  /* ---- Shadows — hard-edged "pixel" drops + deep ambient ----- */
+  --shadow-pixel:    4px 4px 0 0 #000;
+  --shadow-pixel-sm: 2px 2px 0 0 #000;
+  --shadow-pixel-blood: 4px 4px 0 0 var(--blood-deep);
+  --shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-md:    0 10px 28px rgba(0, 0, 0, 0.6);
+  --shadow-lg:    0 22px 60px rgba(0, 0, 0, 0.72);
+  --shadow-inset: inset 0 0 0 1px rgba(236, 231, 219, 0.04);
+
+  /* ---- Glitch — channel-split offsets (replace the old glows) - */
+  --glitch-text:    2px 0 var(--blood), -2px 0 var(--bone-200);
+  --glitch-text-sm: 1px 0 var(--blood), -1px 0 var(--toxic);
+  --glitch-box:     -3px 0 0 var(--blood-soft), 3px 0 0 var(--bruise-soft);
+
+  /* ---- NEON GLOWS — disabled (kept so old refs don't break) --- */
+  --glow-mint: 0 0 0 0 transparent;       /* @kind shadow */
+  --glow-mint-sm: 0 0 0 0 transparent;    /* @kind shadow */
+  --glow-violet: 0 0 0 0 transparent;     /* @kind shadow */
+  --glow-red: 0 0 0 0 transparent;        /* @kind shadow */
+  --glow-text-mint: none;  --glow-text-violet: none;  --glow-text-red: none;
+
+  /* ---- Focus ring -------------------------------------------- */
+  --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--blood-bright);
+
+  /* ---- Textures ---------------------------------------------- */
+  /* Generated 1-bit tiles (originals, made with canvas). */
+  --tex-dither:   url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAVElEQVR4AXSOsQ3AIBAD0c+QJgNkuQzEcgxAwxBwxbkDyTLG9vO15ujtnBvX837/8duNCxM4gTtQJ+AETKDODjwCm3J2wAQ25XxhgxBQJ2ADE6g3AAAA///Yln29AAAABklEQVQDACNRLBE6GmRlAAAAAElFTkSuQmCC");     /* @kind other */
+  --tex-noise:    url("data:image/png;base64,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");      /* @kind other */
+  --tex-halftone: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAQ0lEQVR4AXSKsQkAIAwERRsbh8hujuVuGcImjSD3oIVg4ODIfU6fu8HdK5ydAo9WVwecqIC8KJhZzCgDcEYKCA/AYQMAAP//zpl0TwAAAAZJREFUAwBsfhgNZVeCawAAAABJRU5ErkJggg==");   /* @kind other */
+
+  /* CSS-only fallbacks / overlays */
+  --scanlines: repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.34) 2px 3px); /* @kind other */
+  --scanlines-soft: repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 3px, rgba(0,0,0,0.18) 3px 4px); /* @kind other */
+  --halftone-dots: radial-gradient(rgba(236,231,219,0.5) 0.5px, transparent 1.1px); /* @kind other */
+  --halftone-size: 4px 4px;
+
+  /* ---- The rejilla (now a faint bone grid) ------------------- */
+  --grid-line: rgba(236, 231, 219, 0.045);
+  --grid-size: 36px;
+  --grid-image:
+    linear-gradient(var(--grid-line) var(--border-hairline), transparent var(--border-hairline)),
+    linear-gradient(90deg, var(--grid-line) var(--border-hairline), transparent var(--border-hairline));
+
+  /* ---- HUD corner ticks -------------------------------------- */
+  --tick-size:   12px;
+  --tick-weight: 2px;
+  --tick-color:  var(--blood-line);
+  --tick-inset:  0px;
+
+  /* ---- Motion — snappy, glitchy ------------------------------ */
+  --ease-out:    cubic-bezier(0.16, 1, 0.30, 1);   /* @kind other */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* @kind other */
+  --ease-snap:   steps(2, end);                    /* @kind other */
+  --ease-glitch: steps(3, end);                    /* @kind other */
+  --duration-fast: 90ms;    /* @kind other */
+  --duration-base: 160ms;   /* @kind other */
+  --duration-slow: 320ms;   /* @kind other */
+}
+
+/* ============================================================
+   pelud1n — BASE / RESET  ·  DEDSEC-style rework
+   Black canvas, bone text. Opt-in helpers for the 1-bit world:
+   .dither-bg .scanlines .halftone .crt .glitch  +  .pl-window chrome.
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-regular);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--color-selection); color: var(--bone-pure); }
+
+/* Blocky scrollbar */
+* { scrollbar-width: thin; scrollbar-color: var(--ink-700) transparent; }
+*::-webkit-scrollbar { width: 12px; height: 12px; }
+*::-webkit-scrollbar-thumb { background: var(--ink-700); border: 3px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: var(--ink-600); background-clip: content-box; }
+
+a { color: var(--color-link); text-decoration: none; }
+a:hover { color: var(--color-link-hover); }
+
+/* ---- Font helpers ------------------------------------------ */
+.pixel    { font-family: var(--font-pixel); }
+.display  { font-family: var(--font-display); }
+.terminal { font-family: var(--font-terminal); }
+.mono     { font-family: var(--font-mono); }
+.sans     { font-family: var(--font-sans); }
+
+/* ---- Backgrounds / textures -------------------------------- */
+.peludin-grid {
+  background-image: var(--grid-image);
+  background-size: var(--grid-size) var(--grid-size);
+}
+.dither-bg {
+  background-color: var(--color-bg);
+  background-image: var(--tex-dither);
+  background-repeat: repeat;
+}
+.halftone {
+  background-image: var(--halftone-dots);
+  background-size: var(--halftone-size);
+}
+/* Scanline + vignette overlay — put on a positioned ::after host */
+.scanlines { position: relative; }
+.scanlines::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 5;
+  background: var(--scanlines); mix-blend-mode: multiply;
+}
+.crt { position: relative; }
+.crt::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 6;
+  background:
+    var(--scanlines),
+    radial-gradient(120% 120% at 50% 50%, transparent 60%, rgba(0,0,0,0.55) 100%);
+}
+
+/* ---- Glitch text (set data-text="..." to match content) ----- */
+.glitch { position: relative; display: inline-block; }
+.glitch::before, .glitch::after {
+  content: attr(data-text); position: absolute; left: 0; top: 0; width: 100%;
+  pointer-events: none; opacity: 0.85;
+}
+.glitch::before { color: var(--blood);  transform: translate(-2px, 0); clip-path: inset(0 0 52% 0); }
+.glitch::after  { color: var(--toxic);  transform: translate(2px, 0);  clip-path: inset(52% 0 0 0); }
+.glitch--live::before { animation: pl-glitch 2.4s var(--ease-glitch) infinite; }
+.glitch--live::after  { animation: pl-glitch 2.4s var(--ease-glitch) infinite reverse; }
+
+/* ---- Block cursor (bone by default; add .blood for red) ----- */
+.pl-cursor { display: inline-block; width: 0.55em; height: 0.82em; background: var(--bone-pure);
+  transform: translateY(0.06em); margin-left: 0.06em; }
+.pl-cursor.blood { background: var(--blood); }
+.pl-cursor.blink { animation: peludin-blink 1.05s steps(1) infinite; }
+
+/* ---- Win9x-style window chrome ----------------------------- */
+.pl-window {
+  background: var(--color-surface); border: 1px solid var(--bone-200);
+  box-shadow: var(--shadow-pixel); border-radius: 0;
+}
+.pl-window__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 4px 5px 4px 8px; background: var(--blood); color: var(--bone-pure);
+  font-family: var(--font-pixel); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.pl-window__bar--inert { background: var(--ink-700); color: var(--bone-200); }
+.pl-window__x {
+  width: 16px; height: 14px; flex: 0 0 auto; display: grid; place-items: center;
+  background: var(--ink-850); border: 1px solid var(--bone-300); color: var(--bone-050);
+  font-family: var(--font-pixel); font-size: 9px; cursor: pointer;
+}
+.pl-window__body { padding: 14px; }
+
+/* HUD corner-tick frame */
+.hud-frame { position: relative; }
+.hud-frame::before, .hud-frame::after {
+  content: ""; position: absolute; width: var(--tick-size); height: var(--tick-size); pointer-events: none;
+}
+.hud-frame::before { top: var(--tick-inset); left: var(--tick-inset);
+  border-top: var(--tick-weight) solid var(--tick-color); border-left: var(--tick-weight) solid var(--tick-color); }
+.hud-frame::after { top: var(--tick-inset); right: var(--tick-inset);
+  border-top: var(--tick-weight) solid var(--tick-color); border-right: var(--tick-weight) solid var(--tick-color); }
+
+/* ---- Keyframes --------------------------------------------- */
+@keyframes peludin-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes pl-glitch {
+  0%, 100% { transform: translate(-2px, 0); }
+  20% { transform: translate(2px, -1px); }
+  40% { transform: translate(-1px, 1px); }
+  60% { transform: translate(3px, 0); }
+  80% { transform: translate(-2px, -1px); }
+}
+@keyframes pl-flicker {
+  0%, 100% { opacity: 1; } 92% { opacity: 1; } 93% { opacity: 0.4; } 95% { opacity: 1; } 97% { opacity: 0.7; }
+}
+@keyframes pl-scanroll { 0% { background-position-y: 0; } 100% { background-position-y: 100px; } }
+
+/* pelud1n — writeups (mismo sistema de diseño) */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--ink-950);color:var(--bone-050);font-family:var(--font-sans);min-height:100vh;position:relative;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(236,231,219,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(236,231,219,.045) 1px,transparent 1px),var(--tex-dither);
+  background-size:40px 40px,40px 40px,auto;opacity:.7}
+body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.30) 2px 3px);mix-blend-mode:multiply;opacity:.32}
+a{color:var(--blood-bright);text-decoration:none}
+a:hover{color:var(--bone-pure)}
+
+/* ---- top bar ---- */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;height:52px;padding:0 18px;
+  background:rgba(10,10,11,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--color-border-strong)}
+.topbar .mk{width:30px;height:30px;image-rendering:pixelated}
+.topbar .wm{font-family:var(--font-pixel);font-size:16px;color:var(--bone-pure)}
+.topbar .wm .one{color:var(--blood-bright)}
+.topbar nav{display:flex;gap:2px;margin-left:8px}
+.topbar nav a{font-family:var(--font-pixel);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-secondary);padding:8px 11px}
+.topbar nav a:hover{color:var(--bone-050);background:var(--color-surface-hover)}
+.topbar nav a.on{color:var(--blood-bright)}
+.topbar nav a.on::before{content:"> ";color:var(--blood)}
+.topbar .clock{margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary)}
+
+/* ---- ticker ---- */
+.ticker{position:relative;z-index:1;overflow:hidden;background:var(--blood);border-top:1px solid var(--blood-deep);border-bottom:1px solid var(--blood-deep)}
+.ticker .run{display:inline-block;white-space:nowrap;animation:mq 28s linear infinite;font-family:var(--font-pixel);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--bone-pure);padding:5px 0}
+.ticker .run span{padding:0 16px}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---- window chrome ---- */
+.wrap{position:relative;z-index:1;max-width:940px;margin:32px auto;padding:0 20px}
+.cwin{background:var(--ink-900);border:1px solid var(--blood-line);box-shadow:5px 5px 0 0 var(--blood-deep)}
+.cwin__bar{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--ink-850);border-bottom:1px solid var(--blood-line);
+  font-family:var(--font-pixel);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bone-200)}
+.dot{width:10px;height:10px;background:var(--blood);display:inline-block}.dot.b{background:var(--bruise)}.dot.t{background:var(--toxic)}
+.cwin__body{padding:26px 30px 34px}
+
+/* ---- writeup metadata header ---- */
+.eyebrow{font-family:var(--font-pixel);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--blood-bright)}
+.wu-title{font-family:var(--font-display);font-weight:900;font-style:italic;font-size:52px;line-height:.95;text-transform:uppercase;color:var(--bone-pure);margin:10px 0 14px}
+.wu-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.badge{font-family:var(--font-pixel);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border:1px solid}
+.badge.plat{color:var(--bone-pure);background:var(--blood);border-color:var(--blood-deep)}
+.badge.easy{color:var(--toxic);border-color:var(--toxic-line)}
+.badge.medium{color:var(--mustard);border-color:rgba(196,154,60,.5)}
+.badge.hard{color:var(--rust);border-color:rgba(181,83,42,.5)}
+.badge.insane{color:var(--blood-bright);border-color:var(--blood-line)}
+.chip{font-family:var(--font-mono);font-size:13px;color:var(--bone-100);background:var(--ink-850);border:1px solid var(--blood-line);padding:4px 10px}
+.chip b{color:var(--bone-400);font-weight:500}
+.wu-tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:6px}
+.wu-tags span{font-family:var(--font-mono);font-size:12px;color:var(--color-text-tertiary)}
+.hr-blood{height:2px;background:var(--blood);border:0;margin:22px 0 6px;box-shadow:3px 3px 0 0 var(--blood-deep)}
+
+/* ---- article (markdown) ---- */
+.md{font-size:16px;line-height:1.75;color:var(--bone-050)}
+.md>*{margin:0 0 16px}
+.md h1{font-family:var(--font-display);font-weight:900;font-style:italic;text-transform:uppercase;font-size:34px;line-height:1.05;color:var(--bone-pure);margin:34px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--blood-line)}
+.md h2{font-family:var(--font-display);font-weight:800;text-transform:uppercase;font-size:26px;color:var(--blood-bright);margin:30px 0 12px;display:flex;align-items:center;gap:10px}
+.md h2::before{content:"//";font-family:var(--font-pixel);font-size:14px;color:var(--blood)}
+.md h3{font-family:var(--font-pixel);font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--bone-100);margin:24px 0 10px}
+.md h4{font-family:var(--font-sans);font-weight:700;font-size:17px;color:var(--bone-100);margin:20px 0 8px}
+.md p{color:var(--bone-100)}
+.md strong{color:var(--bone-pure)}
+.md em{color:var(--bone-200)}
+.md ul,.md ol{padding-left:24px;color:var(--bone-100)}
+.md li{margin:6px 0}
+.md ul li::marker{color:var(--blood-bright)}
+.md ol li::marker{color:var(--blood-bright);font-family:var(--font-mono)}
+.md blockquote{border-left:3px solid var(--blood);background:var(--blood-soft);padding:10px 16px;color:var(--bone-200);font-style:italic}
+.md a{border-bottom:1px solid var(--blood-line)}
+.md hr{height:1px;background:var(--color-border-strong);border:0;margin:26px 0}
+/* inline code */
+.md :not(pre)>code{font-family:var(--font-mono);font-size:.9em;color:var(--blood-bright);background:var(--ink-850);border:1px solid var(--blood-line);padding:1px 6px;border-radius:2px}
+/* code blocks — terminal window */
+.md pre{position:relative;background:var(--ink-1000);border:1px solid var(--blood-line);box-shadow:4px 4px 0 0 #000;padding:34px 16px 16px;overflow-x:auto;margin:18px 0}
+.md pre::before{content:"● ● ●";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding:0 12px;font-size:9px;letter-spacing:2px;color:var(--blood);background:var(--ink-850);border-bottom:1px solid var(--blood-line)}
+.md pre code{font-family:var(--font-mono);font-size:13.5px;line-height:1.6;color:var(--bone-100);background:none;border:0;padding:0}
+/* tables */
+.md table{width:100%;border-collapse:collapse;font-size:14px;margin:18px 0}
+.md th,.md td{border:1px solid var(--color-border-strong);padding:8px 12px;text-align:left}
+.md th{background:var(--ink-850);font-family:var(--font-pixel);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--bone-200)}
+.md td{color:var(--bone-100);font-family:var(--font-mono);font-size:13px}
+/* images / screenshots */
+.md img{max-width:100%;height:auto;display:block;margin:18px 0;border:1px solid var(--blood-line);box-shadow:5px 5px 0 0 var(--blood-deep)}
+
+/* ---- index list (writeups.html) ---- */
+.list a.row{display:flex;align-items:center;gap:16px;padding:16px 10px;border-top:1px solid var(--color-border);color:inherit;transition:background .12s}
+.list a.row:first-child{border-top:0}
+.list a.row:hover{background:var(--color-surface-hover)}
+.list .b{min-width:64px;text-align:center}
+.list .info{flex:1;min-width:0}
+.list .t{font-family:var(--font-mono);font-size:16px;font-weight:600;color:var(--bone-050)}
+.list .tags{display:flex;gap:9px;margin-top:4px;flex-wrap:wrap}
+.list .tags span{font-family:var(--font-mono);font-size:11px;color:var(--color-text-tertiary)}
+.list .right{text-align:right;font-family:var(--font-mono);font-size:11px;color:var(--color-text-tertiary);white-space:nowrap}
+.list .right .go{margin-top:3px;color:var(--blood-bright)}
+.empty{font-family:var(--font-mono);color:var(--color-text-tertiary);padding:20px 4px}
+
+/* ---- footer ---- */
+.foot{position:relative;z-index:1;border-top:1px solid var(--color-border-strong);background:var(--color-bg-elevated);margin-top:40px}
+.foot .in{max-width:940px;margin:0 auto;padding:24px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:var(--font-pixel);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-tertiary)}
+.back{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-pixel);font-size:11px;text-transform:uppercase;color:var(--blood-bright);margin-bottom:18px}
+
+@media(max-width:640px){.wu-title{font-size:38px}.cwin__body{padding:20px 16px}.topbar nav a{padding:8px 7px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+<a href="index.html" style="display:inline-flex;align-items:center;gap:9px"><svg class="mk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" shape-rendering="crispEdges" role="img" aria-label="pelud1n mark"><rect x="0.5" y="0.5" width="63" height="63" fill="#0A0A0B" stroke="#B5202C"></rect><g fill="none" stroke="#B5202C" stroke-width="2"><path d="M5 13 V5 H13 M51 5 H59 V13 M59 51 V59 H51 M13 59 H5 V51"></path></g><rect x="10" y="18" width="4" height="4" fill="#ECE7DB"></rect><rect x="14" y="18" width="4" height="4" fill="#ECE7DB"></rect><rect x="18" y="18" width="4" height="4" fill="#ECE7DB"></rect><rect x="22" y="18" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="22" width="4" height="4" fill="#ECE7DB"></rect><rect x="26" y="22" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="26" width="4" height="4" fill="#ECE7DB"></rect><rect x="26" y="26" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="30" width="4" height="4" fill="#ECE7DB"></rect><rect x="14" y="30" width="4" height="4" fill="#ECE7DB"></rect><rect x="18" y="30" width="4" height="4" fill="#ECE7DB"></rect><rect x="22" y="30" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="34" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="38" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="42" width="4" height="4" fill="#ECE7DB"></rect><rect x="42" y="18" width="4" height="4" fill="#B5202C"></rect><rect x="38" y="22" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="22" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="26" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="30" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="34" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="38" width="4" height="4" fill="#B5202C"></rect><rect x="38" y="42" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="42" width="4" height="4" fill="#B5202C"></rect><rect x="46" y="42" width="4" height="4" fill="#B5202C"></rect><rect x="56" y="18" width="8" height="28" fill="#ECE7DB"></rect></svg><span class="wm">pelud<span class="one">1</span>n</span></a>
+<nav><a href="index.html">inicio</a><a href="writeups.html" class="on">writeups</a></nav>
+<span class="clock" id="clock">--:--:--</span>
+</header>
+<div class="ticker"><div class="run"><span>// writeups</span><span>root@pelud1n:~#</span><span>recon</span><span>exploit</span><span>post-ex</span><span>documentar</span><span>no confíes en nada</span><span>cífralo todo</span><span>// writeups</span><span>root@pelud1n:~#</span><span>recon</span><span>exploit</span><span>post-ex</span><span>documentar</span><span>no confíes en nada</span><span>cífralo todo</span></div></div>
+<main class="wrap">
+<div class="cwin">
+<div class="cwin__bar"><span class="dot"></span><span class="dot b"></span><span class="dot t"></span>&nbsp; writeup.md — pelud1n</div>
+<div class="cwin__body">
+<a class="back" href="writeups.html">&larr; volver a writeups</a>
+<div class="eyebrow" id="wu-eyebrow">// writeup</div>
+<h1 class="wu-title" id="wu-title">cargando…</h1>
+<div class="wu-meta" id="wu-meta"></div>
+<div class="wu-tags" id="wu-tags"></div>
+<hr class="hr-blood">
+<article class="md" id="md"><p class="empty">cargando…</p></article>
+</div></div></main>
+<footer class="foot"><div class="in"><span>pelud1n // offensive-sec</span><span>cífralo todo · no confíes en nada</span></div></footer>
+<script>/**
+ * marked v18.0.5 - a markdown parser
+ * Copyright (c) 2018-2026, MarkedJS. (MIT License)
+ * Copyright (c) 2011-2018, Christopher Jeffrey. (MIT License)
+ * https://github.com/markedjs/marked
+ */
+
+/**
+ * DO NOT EDIT THIS FILE
+ * The code in this file is generated from files in ./src/
+ */
+(function(g,f){if(typeof exports=="object"&&typeof module<"u"){module.exports=f()}else if("function"==typeof define && define.amd){define("marked",f)}else {g["marked"]=f()}}(typeof globalThis < "u" ? globalThis : typeof self < "u" ? self : this,function(){var exports={};var __exports=exports;var module={exports};
+"use strict";var N=Object.defineProperty;var Oe=Object.getOwnPropertyDescriptor;var we=Object.getOwnPropertyNames;var ye=Object.prototype.hasOwnProperty;var Pe=(l,e)=>{for(var t in e)N(l,t,{get:e[t],enumerable:!0})},Se=(l,e,t,n)=>{if(e&&typeof e=="object"||typeof e=="function")for(let s of we(e))!ye.call(l,s)&&s!==t&&N(l,s,{get:()=>e[s],enumerable:!(n=Oe(e,s))||n.enumerable});return l};var $e=l=>Se(N({},"__esModule",{value:!0}),l);var Rt={};Pe(Rt,{Hooks:()=>P,Lexer:()=>x,Marked:()=>C,Parser:()=>b,Renderer:()=>y,TextRenderer:()=>S,Tokenizer:()=>w,defaults:()=>T,getDefaults:()=>_,lexer:()=>bt,marked:()=>g,options:()=>ht,parse:()=>mt,parseInline:()=>ft,parser:()=>xt,setOptions:()=>kt,use:()=>dt,walkTokens:()=>gt});module.exports=$e(Rt);function _(){return{async:!1,breaks:!1,extensions:null,gfm:!0,hooks:null,pedantic:!1,renderer:null,silent:!1,tokenizer:null,walkTokens:null}}var T=_();function Q(l){T=l}var z={exec:()=>null};function E(l){let e=[];return t=>{let n=Math.max(0,Math.min(3,t-1)),s=e[n];return s||(s=l(n),e[n]=s),s}}function d(l,e=""){let t=typeof l=="string"?l:l.source,n={replace:(s,r)=>{let i=typeof r=="string"?r:r.source;return i=i.replace(m.caret,"$1"),t=t.replace(s,i),n},getRegex:()=>new RegExp(t,e)};return n}var Le=((l="")=>{try{return!!new RegExp("(?<=1)(?<!1)"+l)}catch{return!1}})(),m={codeRemoveIndent:/^(?: {1,4}| {0,3}\t)/gm,outputLinkReplace:/\\([\[\]])/g,indentCodeCompensation:/^(\s+)(?:```)/,beginningSpace:/^\s+/,endingHash:/#$/,startingSpaceChar:/^ /,endingSpaceChar:/ $/,nonSpaceChar:/[^ ]/,newLineCharGlobal:/\n/g,tabCharGlobal:/\t/g,multipleSpaceGlobal:/\s+/g,blankLine:/^[ \t]*$/,doubleBlankLine:/\n[ \t]*\n[ \t]*$/,blockquoteStart:/^ {0,3}>/,blockquoteSetextReplace:/\n {0,3}((?:=+|-+) *)(?=\n|$)/g,blockquoteSetextReplace2:/^ {0,3}>[ \t]?/gm,listReplaceNesting:/^ {1,4}(?=( {4})*[^ ])/g,listIsTask:/^\[[ xX]\] +\S/,listReplaceTask:/^\[[ xX]\] +/,listTaskCheckbox:/\[[ xX]\]/,anyLine:/\n.*\n/,hrefBrackets:/^<(.*)>$/,tableDelimiter:/[:|]/,tableAlignChars:/^\||\| *$/g,tableRowBlankLine:/\n[ \t]*$/,tableAlignRight:/^ *-+: *$/,tableAlignCenter:/^ *:-+: *$/,tableAlignLeft:/^ *:-+ *$/,startATag:/^<a /i,endATag:/^<\/a>/i,startPreScriptTag:/^<(pre|code|kbd|script)(\s|>)/i,endPreScriptTag:/^<\/(pre|code|kbd|script)(\s|>)/i,startAngleBracket:/^</,endAngleBracket:/>$/,pedanticHrefTitle:/^([^'"]*[^\s])\s+(['"])(.*)\2/,unicodeAlphaNumeric:/[\p{L}\p{N}]/u,escapeTest:/[&<>"']/,escapeReplace:/[&<>"']/g,escapeTestNoEncode:/[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/,escapeReplaceNoEncode:/[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/g,caret:/(^|[^\[])\^/g,percentDecode:/%25/g,findPipe:/\|/g,splitPipe:/ \|/,slashPipe:/\\\|/g,carriageReturn:/\r\n|\r/g,spaceLine:/^ +$/gm,notSpaceStart:/^\S*/,endingNewline:/\n$/,listItemRegex:l=>new RegExp(`^( {0,3}${l})((?:[	 ][^\\n]*)?(?:\\n|$))`),nextBulletRegex:E(l=>new RegExp(`^ {0,${l}}(?:[*+-]|\\d{1,9}[.)])((?:[ 	][^\\n]*)?(?:\\n|$))`)),hrRegex:E(l=>new RegExp(`^ {0,${l}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`)),fencesBeginRegex:E(l=>new RegExp(`^ {0,${l}}(?:\`\`\`|~~~)`)),headingBeginRegex:E(l=>new RegExp(`^ {0,${l}}#`)),htmlBeginRegex:E(l=>new RegExp(`^ {0,${l}}<(?:[a-z].*>|!--)`,"i")),blockquoteBeginRegex:E(l=>new RegExp(`^ {0,${l}}>`))},_e=/^(?:[ \t]*(?:\n|$))+/,ze=/^((?: {4}| {0,3}\t)[^\n]+(?:\n(?:[ \t]*(?:\n|$))*)?)+/,Me=/^ {0,3}(`{3,}(?=[^`\n]*(?:\n|$))|~{3,})([^\n]*)(?:\n|$)(?:|([\s\S]*?)(?:\n|$))(?: {0,3}\1[~`]* *(?=\n|$)|$)/,D=/^ {0,3}((?:-[\t ]*){3,}|(?:_[ \t]*){3,}|(?:\*[ \t]*){3,})(?:\n+|$)/,Ee=/^ {0,3}(#{1,6})(?=\s|$)(.*)(?:\n+|$)/,F=/ {0,3}(?:[*+-]|\d{1,9}[.)])/,ae=/^(?!bull |blockCode|fences|blockquote|heading|html|table)((?:.|\n(?!\s*?\n|bull |blockCode|fences|blockquote|heading|html|table))+?)\n {0,3}(=+|-+) *(?:\n+|$)/,le=d(ae).replace(/bull/g,F).replace(/blockCode/g,/(?: {4}| {0,3}\t)/).replace(/fences/g,/ {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g,/ {0,3}>/).replace(/heading/g,/ {0,3}#{1,6}/).replace(/html/g,/ {0,3}<[^\n>]+>\n/).replace(/\|table/g,"").getRegex(),Ie=d(ae).replace(/bull/g,F).replace(/blockCode/g,/(?: {4}| {0,3}\t)/).replace(/fences/g,/ {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g,/ {0,3}>/).replace(/heading/g,/ {0,3}#{1,6}/).replace(/html/g,/ {0,3}<[^\n>]+>\n/).replace(/table/g,/ {0,3}\|?(?:[:\- ]*\|)+[\:\- ]*\n/).getRegex(),U=/^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|html|table| +\n)[^\n]+)*)/,Ae=/^[^\n]+/,K=/(?!\s*\])(?:\\[\s\S]|[^\[\]\\])+/,Ce=d(/^ {0,3}\[(label)\]: *(?:\n[ \t]*)?([^<\s][^\s]*|<.*?>)(?:(?: +(?:\n[ \t]*)?| *\n[ \t]*)(title))? *(?:\n+|$)/).replace("label",K).replace("title",/(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/).getRegex(),Be=d(/^(bull)([ \t][^\n]*?)?(?:\n|$)/).replace(/bull/g,F).getRegex(),H="address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul",W=/<!--(?:-?>|[\s\S]*?(?:-->|$))/,De=d("^ {0,3}(?:<(script|pre|style|textarea)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n+|$)|comment[^\\n]*(\\n+|$)|<\\?[\\s\\S]*?(?:\\?>\\n*|$)|<![A-Z][\\s\\S]*?(?:>\\n*|$)|<!\\[CDATA\\[[\\s\\S]*?(?:\\]\\]>\\n*|$)|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$)|<(?!script|pre|style|textarea)([a-z][\\w-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$)|</(?!script|pre|style|textarea)[a-z][\\w-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$))","i").replace("comment",W).replace("tag",H).replace("attribute",/ +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/).getRegex(),ue=d(U).replace("hr",D).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("|table","").replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)])[ \\t]+[^ \\t\\n]").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",H).getRegex(),qe=d(/^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/).replace("paragraph",ue).getRegex(),X={blockquote:qe,code:ze,def:Ce,fences:Me,heading:Ee,hr:D,html:De,lheading:le,list:Be,newline:_e,paragraph:ue,table:z,text:Ae},ie=d("^ *([^\\n ].*)\\n {0,3}((?:\\| *)?:?-+:? *(?:\\| *:?-+:? *)*(?:\\| *)?)(?:\\n((?:(?! *\\n|hr|heading|blockquote|code|fences|list|html).*(?:\\n|$))*)\\n*|$)").replace("hr",D).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("blockquote"," {0,3}>").replace("code","(?: {4}| {0,3}	)[^\\n]").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)])[ \\t]").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",H).getRegex(),ve={...X,lheading:Ie,table:ie,paragraph:d(U).replace("hr",D).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("table",ie).replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)])[ \\t]+[^ \\t\\n]").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",H).getRegex()},He={...X,html:d(`^ *(?:comment *(?:\\n|\\s*$)|<(tag)[\\s\\S]+?</\\1> *(?:\\n{2,}|\\s*$)|<tag(?:"[^"]*"|'[^']*'|\\s[^'"/>\\s]*)*?/?> *(?:\\n{2,}|\\s*$))`).replace("comment",W).replace(/tag/g,"(?!(?:a|em|strong|small|s|cite|q|dfn|abbr|data|time|code|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo|span|br|wbr|ins|del|img)\\b)\\w+(?!:|[^\\w\\s@]*@)\\b").getRegex(),def:/^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +(["(][^\n]+[")]))? *(?:\n+|$)/,heading:/^(#{1,6})(.*)(?:\n+|$)/,fences:z,lheading:/^(.+?)\n {0,3}(=+|-+) *(?:\n+|$)/,paragraph:d(U).replace("hr",D).replace("heading",` *#{1,6} *[^
+]`).replace("lheading",le).replace("|table","").replace("blockquote"," {0,3}>").replace("|fences","").replace("|list","").replace("|html","").replace("|tag","").getRegex()},Ze=/^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/,Ge=/^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/,pe=/^( {2,}|\\)\n(?!\s*$)/,Ne=/^(`+|[^`])(?:(?= {2,}\n)|[\s\S]*?(?:(?=[\\<!\[`*_]|\b_|$)|[^ ](?= {2,}\n)))/,I=/[\p{P}\p{S}]/u,Z=/[\s\p{P}\p{S}]/u,J=/[^\s\p{P}\p{S}]/u,Qe=d(/^((?![*_])punctSpace)/,"u").replace(/punctSpace/g,Z).getRegex(),ce=/(?!~)[\p{P}\p{S}]/u,je=/(?!~)[\s\p{P}\p{S}]/u,Fe=/(?:[^\s\p{P}\p{S}]|~)/u,Ue=d(/link|precode-code|html/,"g").replace("link",/\[(?:[^\[\]`]|(?<a>`+)[^`]+\k<a>(?!`))*?\]\((?:\\[\s\S]|[^\\\(\)]|\((?:\\[\s\S]|[^\\\(\)])*\))*\)/).replace("precode-",Le?"(?<!`)()":"(^^|[^`])").replace("code",/(?<b>`+)[^`]+\k<b>(?!`)/).replace("html",/<(?! )[^<>]*?>/).getRegex(),he=/^(?:\*+(?:((?!\*)punct)|([^\s*]))?)|^_+(?:((?!_)punct)|([^\s_]))?/,Ke=d(he,"u").replace(/punct/g,I).getRegex(),We=d(he,"u").replace(/punct/g,ce).getRegex(),ke="^[^_*]*?__[^_*]*?\\*[^_*]*?(?=__)|[^*]+(?=[^*])|(?!\\*)punct(\\*+)(?=[\\s]|$)|notPunctSpace(\\*+)(?!\\*)(?=punctSpace|$)|(?!\\*)punctSpace(\\*+)(?=notPunctSpace)|[\\s](\\*+)(?!\\*)(?=punct)|(?!\\*)punct(\\*+)(?!\\*)(?=punct)|notPunctSpace(\\*+)(?=notPunctSpace)",Xe=d(ke,"gu").replace(/notPunctSpace/g,J).replace(/punctSpace/g,Z).replace(/punct/g,I).getRegex(),Je=d(ke,"gu").replace(/notPunctSpace/g,Fe).replace(/punctSpace/g,je).replace(/punct/g,ce).getRegex(),Ve=d("^[^_*]*?\\*\\*[^_*]*?_[^_*]*?(?=\\*\\*)|[^_]+(?=[^_])|(?!_)punct(_+)(?=[\\s]|$)|notPunctSpace(_+)(?!_)(?=punctSpace|$)|(?!_)punctSpace(_+)(?=notPunctSpace)|[\\s](_+)(?!_)(?=punct)|(?!_)punct(_+)(?!_)(?=punct)","gu").replace(/notPunctSpace/g,J).replace(/punctSpace/g,Z).replace(/punct/g,I).getRegex(),Ye=d(/^~~?(?:((?!~)punct)|[^\s~])/,"u").replace(/punct/g,I).getRegex(),et="^[^~]+(?=[^~])|(?!~)punct(~~?)(?=[\\s]|$)|notPunctSpace(~~?)(?!~)(?=punctSpace|$)|(?!~)punctSpace(~~?)(?=notPunctSpace)|[\\s](~~?)(?!~)(?=punct)|(?!~)punct(~~?)(?!~)(?=punct)|notPunctSpace(~~?)(?=notPunctSpace)",tt=d(et,"gu").replace(/notPunctSpace/g,J).replace(/punctSpace/g,Z).replace(/punct/g,I).getRegex(),nt=d(/\\(punct)/,"gu").replace(/punct/g,I).getRegex(),rt=d(/^<(scheme:[^\s\x00-\x1f<>]*|email)>/).replace("scheme",/[a-zA-Z][a-zA-Z0-9+.-]{1,31}/).replace("email",/[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(@)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+(?![-_])/).getRegex(),st=d(W).replace("(?:-->|$)","-->").getRegex(),it=d("^comment|^</[a-zA-Z][\\w:-]*\\s*>|^<[a-zA-Z][\\w-]*(?:attribute)*?\\s*/?>|^<\\?[\\s\\S]*?\\?>|^<![a-zA-Z]+\\s[\\s\\S]*?>|^<!\\[CDATA\\[[\\s\\S]*?\\]\\]>").replace("comment",st).replace("attribute",/\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*"[^"]*"|\s*=\s*'[^']*'|\s*=\s*[^\s"'=<>`]+)?/).getRegex(),v=/(?:\[(?:\\[\s\S]|[^\[\]\\])*\]|\\[\s\S]|`+(?!`)[^`]*?`+(?!`)|``+(?=\])|[^\[\]\\`])*?/,ot=d(/^!?\[(label)\]\(\s*(href)(?:(?:[ \t]+(?:\n[ \t]*)?|\n[ \t]*)(title))?\s*\)/).replace("label",v).replace("href",/<(?:\\.|[^\n<>\\])+>|[^ \t\n\x00-\x1f]*/).replace("title",/"(?:\\"?|[^"\\])*"|'(?:\\'?|[^'\\])*'|\((?:\\\)?|[^)\\])*\)/).getRegex(),de=d(/^!?\[(label)\]\[(ref)\]/).replace("label",v).replace("ref",K).getRegex(),ge=d(/^!?\[(ref)\](?:\[\])?/).replace("ref",K).getRegex(),at=d("reflink|nolink(?!\\()","g").replace("reflink",de).replace("nolink",ge).getRegex(),oe=/[hH][tT][tT][pP][sS]?|[fF][tT][pP]/,V={_backpedal:z,anyPunctuation:nt,autolink:rt,blockSkip:Ue,br:pe,code:Ge,del:z,delLDelim:z,delRDelim:z,emStrongLDelim:Ke,emStrongRDelimAst:Xe,emStrongRDelimUnd:Ve,escape:Ze,link:ot,nolink:ge,punctuation:Qe,reflink:de,reflinkSearch:at,tag:it,text:Ne,url:z},lt={...V,link:d(/^!?\[(label)\]\((.*?)\)/).replace("label",v).getRegex(),reflink:d(/^!?\[(label)\]\s*\[([^\]]*)\]/).replace("label",v).getRegex()},j={...V,emStrongRDelimAst:Je,emStrongLDelim:We,delLDelim:Ye,delRDelim:tt,url:d(/^((?:protocol):\/\/|www\.)(?:[a-zA-Z0-9\-]+\.?)+[^\s<]*|^email/).replace("protocol",oe).replace("email",/[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/).getRegex(),_backpedal:/(?:[^?!.,:;*_'"~()&]+|\([^)]*\)|&(?![a-zA-Z0-9]+;$)|[?!.,:;*_'"~)]+(?!$))+/,del:/^(~~?)(?=[^\s~])((?:\\[\s\S]|[^\\])*?(?:\\[\s\S]|[^\s~\\]))\1(?=[^~]|$)/,text:d(/^([`~]+|[^`~])(?:(?= {2,}\n)|(?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)|[\s\S]*?(?:(?=[\\<!\[`*~_]|\b_|protocol:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)))/).replace("protocol",oe).getRegex()},ut={...j,br:d(pe).replace("{2,}","*").getRegex(),text:d(j.text).replace("\\b_","\\b_| {2,}\\n").replace(/\{2,\}/g,"*").getRegex()},q={normal:X,gfm:ve,pedantic:He},A={normal:V,gfm:j,breaks:ut,pedantic:lt};var pt={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"},fe=l=>pt[l];function O(l,e){if(e){if(m.escapeTest.test(l))return l.replace(m.escapeReplace,fe)}else if(m.escapeTestNoEncode.test(l))return l.replace(m.escapeReplaceNoEncode,fe);return l}function Y(l){try{l=encodeURI(l).replace(m.percentDecode,"%")}catch{return null}return l}function ee(l,e){let t=l.replace(m.findPipe,(r,i,o)=>{let u=!1,a=i;for(;--a>=0&&o[a]==="\\";)u=!u;return u?"|":" |"}),n=t.split(m.splitPipe),s=0;if(n[0].trim()||n.shift(),n.length>0&&!n.at(-1)?.trim()&&n.pop(),e)if(n.length>e)n.splice(e);else for(;n.length<e;)n.push("");for(;s<n.length;s++)n[s]=n[s].trim().replace(m.slashPipe,"|");return n}function L(l,e,t){let n=l.length;if(n===0)return"";let s=0;for(;s<n;){let r=l.charAt(n-s-1);if(r===e&&!t)s++;else if(r!==e&&t)s++;else break}return l.slice(0,n-s)}function te(l){let e=l.split(`
+`),t=e.length-1;for(;t>=0&&m.blankLine.test(e[t]);)t--;return e.length-t<=2?l:e.slice(0,t+1).join(`
+`)}function me(l,e){if(l.indexOf(e[1])===-1)return-1;let t=0;for(let n=0;n<l.length;n++)if(l[n]==="\\")n++;else if(l[n]===e[0])t++;else if(l[n]===e[1]&&(t--,t<0))return n;return t>0?-2:-1}function xe(l,e=0){let t=e,n="";for(let s of l)if(s==="	"){let r=4-t%4;n+=" ".repeat(r),t+=r}else n+=s,t++;return n}function be(l,e,t,n,s){let r=e.href,i=e.title||null,o=l[1].replace(s.other.outputLinkReplace,"$1");n.state.inLink=!0;let u={type:l[0].charAt(0)==="!"?"image":"link",raw:t,href:r,title:i,text:o,tokens:n.inlineTokens(o)};return n.state.inLink=!1,u}function ct(l,e,t){let n=l.match(t.other.indentCodeCompensation);if(n===null)return e;let s=n[1];return e.split(`
+`).map(r=>{let i=r.match(t.other.beginningSpace);if(i===null)return r;let[o]=i;return o.length>=s.length?r.slice(s.length):r}).join(`
+`)}var w=class{options;rules;lexer;constructor(e){this.options=e||T}space(e){let t=this.rules.block.newline.exec(e);if(t&&t[0].length>0)return{type:"space",raw:t[0]}}code(e){let t=this.rules.block.code.exec(e);if(t){let n=this.options.pedantic?t[0]:te(t[0]),s=n.replace(this.rules.other.codeRemoveIndent,"");return{type:"code",raw:n,codeBlockStyle:"indented",text:s}}}fences(e){let t=this.rules.block.fences.exec(e);if(t){let n=t[0],s=ct(n,t[3]||"",this.rules);return{type:"code",raw:n,lang:t[2]?t[2].trim().replace(this.rules.inline.anyPunctuation,"$1"):t[2],text:s}}}heading(e){let t=this.rules.block.heading.exec(e);if(t){let n=t[2].trim();if(this.rules.other.endingHash.test(n)){let s=L(n,"#");(this.options.pedantic||!s||this.rules.other.endingSpaceChar.test(s))&&(n=s.trim())}return{type:"heading",raw:L(t[0],`
+`),depth:t[1].length,text:n,tokens:this.lexer.inline(n)}}}hr(e){let t=this.rules.block.hr.exec(e);if(t)return{type:"hr",raw:L(t[0],`
+`)}}blockquote(e){let t=this.rules.block.blockquote.exec(e);if(t){let n=L(t[0],`
+`).split(`
+`),s="",r="",i=[];for(;n.length>0;){let o=!1,u=[],a;for(a=0;a<n.length;a++)if(this.rules.other.blockquoteStart.test(n[a]))u.push(n[a]),o=!0;else if(!o)u.push(n[a]);else break;n=n.slice(a);let c=u.join(`
+`),p=c.replace(this.rules.other.blockquoteSetextReplace,`
+    $1`).replace(this.rules.other.blockquoteSetextReplace2,"");s=s?`${s}
+${c}`:c,r=r?`${r}
+${p}`:p;let k=this.lexer.state.top;if(this.lexer.state.top=!0,this.lexer.blockTokens(p,i,!0),this.lexer.state.top=k,n.length===0)break;let h=i.at(-1);if(h?.type==="code")break;if(h?.type==="blockquote"){let R=h,f=R.raw+`
+`+n.join(`
+`),$=this.blockquote(f);i[i.length-1]=$,s=s.substring(0,s.length-R.raw.length)+$.raw,r=r.substring(0,r.length-R.text.length)+$.text;break}else if(h?.type==="list"){let R=h,f=R.raw+`
+`+n.join(`
+`),$=this.list(f);i[i.length-1]=$,s=s.substring(0,s.length-h.raw.length)+$.raw,r=r.substring(0,r.length-R.raw.length)+$.raw,n=f.substring(i.at(-1).raw.length).split(`
+`);continue}}return{type:"blockquote",raw:s,tokens:i,text:r}}}list(e){let t=this.rules.block.list.exec(e);if(t){let n=t[1].trim(),s=n.length>1,r={type:"list",raw:"",ordered:s,start:s?+n.slice(0,-1):"",loose:!1,items:[]};n=s?`\\d{1,9}\\${n.slice(-1)}`:`\\${n}`,this.options.pedantic&&(n=s?n:"[*+-]");let i=this.rules.other.listItemRegex(n),o=!1;for(;e;){let a=!1,c="",p="";if(!(t=i.exec(e))||this.rules.block.hr.test(e))break;c=t[0],e=e.substring(c.length);let k=xe(t[2].split(`
+`,1)[0],t[1].length),h=e.split(`
+`,1)[0],R=!k.trim(),f=0;if(this.options.pedantic?(f=2,p=k.trimStart()):R?f=t[1].length+1:(f=k.search(this.rules.other.nonSpaceChar),f=f>4?1:f,p=k.slice(f),f+=t[1].length),R&&this.rules.other.blankLine.test(h)&&(c+=h+`
+`,e=e.substring(h.length+1),a=!0),!a){let $=this.rules.other.nextBulletRegex(f),ne=this.rules.other.hrRegex(f),re=this.rules.other.fencesBeginRegex(f),se=this.rules.other.headingBeginRegex(f),Re=this.rules.other.htmlBeginRegex(f),Te=this.rules.other.blockquoteBeginRegex(f);for(;e;){let G=e.split(`
+`,1)[0],B;if(h=G,this.options.pedantic?(h=h.replace(this.rules.other.listReplaceNesting,"  "),B=h):B=h.replace(this.rules.other.tabCharGlobal,"    "),re.test(h)||se.test(h)||Re.test(h)||Te.test(h)||$.test(h)||ne.test(h))break;if(B.search(this.rules.other.nonSpaceChar)>=f||!h.trim())p+=`
+`+B.slice(f);else{if(R||k.replace(this.rules.other.tabCharGlobal,"    ").search(this.rules.other.nonSpaceChar)>=4||re.test(k)||se.test(k)||ne.test(k))break;p+=`
+`+h}R=!h.trim(),c+=G+`
+`,e=e.substring(G.length+1),k=B.slice(f)}}r.loose||(o?r.loose=!0:this.rules.other.doubleBlankLine.test(c)&&(o=!0)),r.items.push({type:"list_item",raw:c,task:!!this.options.gfm&&this.rules.other.listIsTask.test(p),loose:!1,text:p,tokens:[]}),r.raw+=c}let u=r.items.at(-1);if(u)u.raw=u.raw.trimEnd(),u.text=u.text.trimEnd();else return;r.raw=r.raw.trimEnd();for(let a of r.items){this.lexer.state.top=!1,a.tokens=this.lexer.blockTokens(a.text,[]);let c=a.tokens[0];if(a.task&&(c?.type==="text"||c?.type==="paragraph")){a.text=a.text.replace(this.rules.other.listReplaceTask,""),c.raw=c.raw.replace(this.rules.other.listReplaceTask,""),c.text=c.text.replace(this.rules.other.listReplaceTask,"");for(let k=this.lexer.inlineQueue.length-1;k>=0;k--)if(this.rules.other.listIsTask.test(this.lexer.inlineQueue[k].src)){this.lexer.inlineQueue[k].src=this.lexer.inlineQueue[k].src.replace(this.rules.other.listReplaceTask,"");break}let p=this.rules.other.listTaskCheckbox.exec(a.raw);if(p){let k={type:"checkbox",raw:p[0]+" ",checked:p[0]!=="[ ]"};a.checked=k.checked,r.loose?a.tokens[0]&&["paragraph","text"].includes(a.tokens[0].type)&&"tokens"in a.tokens[0]&&a.tokens[0].tokens?(a.tokens[0].raw=k.raw+a.tokens[0].raw,a.tokens[0].text=k.raw+a.tokens[0].text,a.tokens[0].tokens.unshift(k)):a.tokens.unshift({type:"paragraph",raw:k.raw,text:k.raw,tokens:[k]}):a.tokens.unshift(k)}}else a.task&&(a.task=!1);if(!r.loose){let p=a.tokens.filter(h=>h.type==="space"),k=p.length>0&&p.some(h=>this.rules.other.anyLine.test(h.raw));r.loose=k}}if(r.loose)for(let a of r.items){a.loose=!0;for(let c of a.tokens)c.type==="text"&&(c.type="paragraph")}return r}}html(e){let t=this.rules.block.html.exec(e);if(t){let n=te(t[0]);return{type:"html",block:!0,raw:n,pre:t[1]==="pre"||t[1]==="script"||t[1]==="style",text:n}}}def(e){let t=this.rules.block.def.exec(e);if(t){let n=t[1].toLowerCase().replace(this.rules.other.multipleSpaceGlobal," "),s=t[2]?t[2].replace(this.rules.other.hrefBrackets,"$1").replace(this.rules.inline.anyPunctuation,"$1"):"",r=t[3]?t[3].substring(1,t[3].length-1).replace(this.rules.inline.anyPunctuation,"$1"):t[3];return{type:"def",tag:n,raw:L(t[0],`
+`),href:s,title:r}}}table(e){let t=this.rules.block.table.exec(e);if(!t||!this.rules.other.tableDelimiter.test(t[2]))return;let n=ee(t[1]),s=t[2].replace(this.rules.other.tableAlignChars,"").split("|"),r=t[3]?.trim()?t[3].replace(this.rules.other.tableRowBlankLine,"").split(`
+`):[],i={type:"table",raw:L(t[0],`
+`),header:[],align:[],rows:[]};if(n.length===s.length){for(let o of s)this.rules.other.tableAlignRight.test(o)?i.align.push("right"):this.rules.other.tableAlignCenter.test(o)?i.align.push("center"):this.rules.other.tableAlignLeft.test(o)?i.align.push("left"):i.align.push(null);for(let o=0;o<n.length;o++)i.header.push({text:n[o],tokens:this.lexer.inline(n[o]),header:!0,align:i.align[o]});for(let o of r)i.rows.push(ee(o,i.header.length).map((u,a)=>({text:u,tokens:this.lexer.inline(u),header:!1,align:i.align[a]})));return i}}lheading(e){let t=this.rules.block.lheading.exec(e);if(t){let n=t[1].trim();return{type:"heading",raw:L(t[0],`
+`),depth:t[2].charAt(0)==="="?1:2,text:n,tokens:this.lexer.inline(n)}}}paragraph(e){let t=this.rules.block.paragraph.exec(e);if(t){let n=t[1].charAt(t[1].length-1)===`
+`?t[1].slice(0,-1):t[1];return{type:"paragraph",raw:t[0],text:n,tokens:this.lexer.inline(n)}}}text(e){let t=this.rules.block.text.exec(e);if(t)return{type:"text",raw:t[0],text:t[0],tokens:this.lexer.inline(t[0])}}escape(e){let t=this.rules.inline.escape.exec(e);if(t)return{type:"escape",raw:t[0],text:t[1]}}tag(e){let t=this.rules.inline.tag.exec(e);if(t)return!this.lexer.state.inLink&&this.rules.other.startATag.test(t[0])?this.lexer.state.inLink=!0:this.lexer.state.inLink&&this.rules.other.endATag.test(t[0])&&(this.lexer.state.inLink=!1),!this.lexer.state.inRawBlock&&this.rules.other.startPreScriptTag.test(t[0])?this.lexer.state.inRawBlock=!0:this.lexer.state.inRawBlock&&this.rules.other.endPreScriptTag.test(t[0])&&(this.lexer.state.inRawBlock=!1),{type:"html",raw:t[0],inLink:this.lexer.state.inLink,inRawBlock:this.lexer.state.inRawBlock,block:!1,text:t[0]}}link(e){let t=this.rules.inline.link.exec(e);if(t){let n=t[2].trim();if(!this.options.pedantic&&this.rules.other.startAngleBracket.test(n)){if(!this.rules.other.endAngleBracket.test(n))return;let i=L(n.slice(0,-1),"\\");if((n.length-i.length)%2===0)return}else{let i=me(t[2],"()");if(i===-2)return;if(i>-1){let u=(t[0].indexOf("!")===0?5:4)+t[1].length+i;t[2]=t[2].substring(0,i),t[0]=t[0].substring(0,u).trim(),t[3]=""}}let s=t[2],r="";if(this.options.pedantic){let i=this.rules.other.pedanticHrefTitle.exec(s);i&&(s=i[1],r=i[3])}else r=t[3]?t[3].slice(1,-1):"";return s=s.trim(),this.rules.other.startAngleBracket.test(s)&&(this.options.pedantic&&!this.rules.other.endAngleBracket.test(n)?s=s.slice(1):s=s.slice(1,-1)),be(t,{href:s&&s.replace(this.rules.inline.anyPunctuation,"$1"),title:r&&r.replace(this.rules.inline.anyPunctuation,"$1")},t[0],this.lexer,this.rules)}}reflink(e,t){let n;if((n=this.rules.inline.reflink.exec(e))||(n=this.rules.inline.nolink.exec(e))){let s=(n[2]||n[1]).replace(this.rules.other.multipleSpaceGlobal," "),r=t[s.toLowerCase()];if(!r){let i=n[0].charAt(0);return{type:"text",raw:i,text:i}}return be(n,r,n[0],this.lexer,this.rules)}}emStrong(e,t,n=""){let s=this.rules.inline.emStrongLDelim.exec(e);if(!s||!s[1]&&!s[2]&&!s[3]&&!s[4]||s[4]&&n.match(this.rules.other.unicodeAlphaNumeric))return;if(!(s[1]||s[3]||"")||!n||this.rules.inline.punctuation.exec(n)){let i=[...s[0]].length-1,o,u,a=i,c=0,p=s[0][0]==="*"?this.rules.inline.emStrongRDelimAst:this.rules.inline.emStrongRDelimUnd;for(p.lastIndex=0,t=t.slice(-1*e.length+i);(s=p.exec(t))!==null;){if(o=s[1]||s[2]||s[3]||s[4]||s[5]||s[6],!o)continue;if(u=[...o].length,s[3]||s[4]){a+=u;continue}else if((s[5]||s[6])&&i%3&&!((i+u)%3)){c+=u;continue}if(a-=u,a>0)continue;u=Math.min(u,u+a+c);let k=[...s[0]][0].length,h=e.slice(0,i+s.index+k+u);if(Math.min(i,u)%2){let f=h.slice(1,-1);return{type:"em",raw:h,text:f,tokens:this.lexer.inlineTokens(f)}}let R=h.slice(2,-2);return{type:"strong",raw:h,text:R,tokens:this.lexer.inlineTokens(R)}}}}codespan(e){let t=this.rules.inline.code.exec(e);if(t){let n=t[2].replace(this.rules.other.newLineCharGlobal," "),s=this.rules.other.nonSpaceChar.test(n),r=this.rules.other.startingSpaceChar.test(n)&&this.rules.other.endingSpaceChar.test(n);return s&&r&&(n=n.substring(1,n.length-1)),{type:"codespan",raw:t[0],text:n}}}br(e){let t=this.rules.inline.br.exec(e);if(t)return{type:"br",raw:t[0]}}del(e,t,n=""){let s=this.rules.inline.delLDelim.exec(e);if(!s)return;if(!(s[1]||"")||!n||this.rules.inline.punctuation.exec(n)){let i=[...s[0]].length-1,o,u,a=i,c=this.rules.inline.delRDelim;for(c.lastIndex=0,t=t.slice(-1*e.length+i);(s=c.exec(t))!==null;){if(o=s[1]||s[2]||s[3]||s[4]||s[5]||s[6],!o||(u=[...o].length,u!==i))continue;if(s[3]||s[4]){a+=u;continue}if(a-=u,a>0)continue;u=Math.min(u,u+a);let p=[...s[0]][0].length,k=e.slice(0,i+s.index+p+u),h=k.slice(i,-i);return{type:"del",raw:k,text:h,tokens:this.lexer.inlineTokens(h)}}}}autolink(e){let t=this.rules.inline.autolink.exec(e);if(t){let n,s;return t[2]==="@"?(n=t[1],s="mailto:"+n):(n=t[1],s=n),{type:"link",raw:t[0],text:n,href:s,tokens:[{type:"text",raw:n,text:n}]}}}url(e){let t;if(t=this.rules.inline.url.exec(e)){let n,s;if(t[2]==="@")n=t[0],s="mailto:"+n;else{let r;do r=t[0],t[0]=this.rules.inline._backpedal.exec(t[0])?.[0]??"";while(r!==t[0]);n=t[0],t[1]==="www."?s="http://"+t[0]:s=t[0]}return{type:"link",raw:t[0],text:n,href:s,tokens:[{type:"text",raw:n,text:n}]}}}inlineText(e){let t=this.rules.inline.text.exec(e);if(t){let n=this.lexer.state.inRawBlock;return{type:"text",raw:t[0],text:t[0],escaped:n}}}};var x=class l{tokens;options;state;inlineQueue;tokenizer;constructor(e){this.tokens=[],this.tokens.links=Object.create(null),this.options=e||T,this.options.tokenizer=this.options.tokenizer||new w,this.tokenizer=this.options.tokenizer,this.tokenizer.options=this.options,this.tokenizer.lexer=this,this.inlineQueue=[],this.state={inLink:!1,inRawBlock:!1,top:!0};let t={other:m,block:q.normal,inline:A.normal};this.options.pedantic?(t.block=q.pedantic,t.inline=A.pedantic):this.options.gfm&&(t.block=q.gfm,this.options.breaks?t.inline=A.breaks:t.inline=A.gfm),this.tokenizer.rules=t}static get rules(){return{block:q,inline:A}}static lex(e,t){return new l(t).lex(e)}static lexInline(e,t){return new l(t).inlineTokens(e)}lex(e){e=e.replace(m.carriageReturn,`
+`),this.blockTokens(e,this.tokens);for(let t=0;t<this.inlineQueue.length;t++){let n=this.inlineQueue[t];this.inlineTokens(n.src,n.tokens)}return this.inlineQueue=[],this.tokens}blockTokens(e,t=[],n=!1){this.tokenizer.lexer=this,this.options.pedantic&&(e=e.replace(m.tabCharGlobal,"    ").replace(m.spaceLine,""));let s=1/0;for(;e;){if(e.length<s)s=e.length;else{this.infiniteLoopError(e.charCodeAt(0));break}let r;if(this.options.extensions?.block?.some(o=>(r=o.call({lexer:this},e,t))?(e=e.substring(r.raw.length),t.push(r),!0):!1))continue;if(r=this.tokenizer.space(e)){e=e.substring(r.raw.length);let o=t.at(-1);r.raw.length===1&&o!==void 0?o.raw+=`
+`:t.push(r);continue}if(r=this.tokenizer.code(e)){e=e.substring(r.raw.length);let o=t.at(-1);o?.type==="paragraph"||o?.type==="text"?(o.raw+=(o.raw.endsWith(`
+`)?"":`
+`)+r.raw,o.text+=`
+`+r.text,this.inlineQueue.at(-1).src=o.text):t.push(r);continue}if(r=this.tokenizer.fences(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.heading(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.hr(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.blockquote(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.list(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.html(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.def(e)){e=e.substring(r.raw.length);let o=t.at(-1);o?.type==="paragraph"||o?.type==="text"?(o.raw+=(o.raw.endsWith(`
+`)?"":`
+`)+r.raw,o.text+=`
+`+r.raw,this.inlineQueue.at(-1).src=o.text):this.tokens.links[r.tag]||(this.tokens.links[r.tag]={href:r.href,title:r.title},t.push(r));continue}if(r=this.tokenizer.table(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.lheading(e)){e=e.substring(r.raw.length),t.push(r);continue}let i=e;if(this.options.extensions?.startBlock){let o=1/0,u=e.slice(1),a;this.options.extensions.startBlock.forEach(c=>{a=c.call({lexer:this},u),typeof a=="number"&&a>=0&&(o=Math.min(o,a))}),o<1/0&&o>=0&&(i=e.substring(0,o+1))}if(this.state.top&&(r=this.tokenizer.paragraph(i))){let o=t.at(-1);n&&o?.type==="paragraph"?(o.raw+=(o.raw.endsWith(`
+`)?"":`
+`)+r.raw,o.text+=`
+`+r.text,this.inlineQueue.pop(),this.inlineQueue.at(-1).src=o.text):t.push(r),n=i.length!==e.length,e=e.substring(r.raw.length);continue}if(r=this.tokenizer.text(e)){e=e.substring(r.raw.length);let o=t.at(-1);o?.type==="text"?(o.raw+=(o.raw.endsWith(`
+`)?"":`
+`)+r.raw,o.text+=`
+`+r.text,this.inlineQueue.pop(),this.inlineQueue.at(-1).src=o.text):t.push(r);continue}if(e){this.infiniteLoopError(e.charCodeAt(0));break}}return this.state.top=!0,t}inline(e,t=[]){return this.inlineQueue.push({src:e,tokens:t}),t}inlineTokens(e,t=[]){this.tokenizer.lexer=this;let n=e,s=null;if(this.tokens.links){let a=Object.keys(this.tokens.links);if(a.length>0)for(;(s=this.tokenizer.rules.inline.reflinkSearch.exec(n))!==null;)a.includes(s[0].slice(s[0].lastIndexOf("[")+1,-1))&&(n=n.slice(0,s.index)+"["+"a".repeat(s[0].length-2)+"]"+n.slice(this.tokenizer.rules.inline.reflinkSearch.lastIndex))}for(;(s=this.tokenizer.rules.inline.anyPunctuation.exec(n))!==null;)n=n.slice(0,s.index)+"++"+n.slice(this.tokenizer.rules.inline.anyPunctuation.lastIndex);let r;for(;(s=this.tokenizer.rules.inline.blockSkip.exec(n))!==null;)r=s[2]?s[2].length:0,n=n.slice(0,s.index+r)+"["+"a".repeat(s[0].length-r-2)+"]"+n.slice(this.tokenizer.rules.inline.blockSkip.lastIndex);n=this.options.hooks?.emStrongMask?.call({lexer:this},n)??n;let i=!1,o="",u=1/0;for(;e;){if(e.length<u)u=e.length;else{this.infiniteLoopError(e.charCodeAt(0));break}i||(o=""),i=!1;let a;if(this.options.extensions?.inline?.some(p=>(a=p.call({lexer:this},e,t))?(e=e.substring(a.raw.length),t.push(a),!0):!1))continue;if(a=this.tokenizer.escape(e)){e=e.substring(a.raw.length),t.push(a);continue}if(a=this.tokenizer.tag(e)){e=e.substring(a.raw.length),t.push(a);continue}if(a=this.tokenizer.link(e)){e=e.substring(a.raw.length),t.push(a);continue}if(a=this.tokenizer.reflink(e,this.tokens.links)){e=e.substring(a.raw.length);let p=t.at(-1);a.type==="text"&&p?.type==="text"?(p.raw+=a.raw,p.text+=a.text):t.push(a);continue}if(a=this.tokenizer.emStrong(e,n,o)){e=e.substring(a.raw.length),t.push(a);continue}if(a=this.tokenizer.codespan(e)){e=e.substring(a.raw.length),t.push(a);continue}if(a=this.tokenizer.br(e)){e=e.substring(a.raw.length),t.push(a);continue}if(a=this.tokenizer.del(e,n,o)){e=e.substring(a.raw.length),t.push(a);continue}if(a=this.tokenizer.autolink(e)){e=e.substring(a.raw.length),t.push(a);continue}if(!this.state.inLink&&(a=this.tokenizer.url(e))){e=e.substring(a.raw.length),t.push(a);continue}let c=e;if(this.options.extensions?.startInline){let p=1/0,k=e.slice(1),h;this.options.extensions.startInline.forEach(R=>{h=R.call({lexer:this},k),typeof h=="number"&&h>=0&&(p=Math.min(p,h))}),p<1/0&&p>=0&&(c=e.substring(0,p+1))}if(a=this.tokenizer.inlineText(c)){e=e.substring(a.raw.length),a.raw.slice(-1)!=="_"&&(o=a.raw.slice(-1)),i=!0;let p=t.at(-1);p?.type==="text"?(p.raw+=a.raw,p.text+=a.text):t.push(a);continue}if(e){this.infiniteLoopError(e.charCodeAt(0));break}}return t}infiniteLoopError(e){let t="Infinite loop on byte: "+e;if(this.options.silent)console.error(t);else throw new Error(t)}};var y=class{options;parser;constructor(e){this.options=e||T}space(e){return""}code({text:e,lang:t,escaped:n}){let s=(t||"").match(m.notSpaceStart)?.[0],r=e.replace(m.endingNewline,"")+`
+`;return s?'<pre><code class="language-'+O(s)+'">'+(n?r:O(r,!0))+`</code></pre>
+`:"<pre><code>"+(n?r:O(r,!0))+`</code></pre>
+`}blockquote({tokens:e}){return`<blockquote>
+${this.parser.parse(e)}</blockquote>
+`}html({text:e}){return e}def(e){return""}heading({tokens:e,depth:t}){return`<h${t}>${this.parser.parseInline(e)}</h${t}>
+`}hr(e){return`<hr>
+`}list(e){let t=e.ordered,n=e.start,s="";for(let o=0;o<e.items.length;o++){let u=e.items[o];s+=this.listitem(u)}let r=t?"ol":"ul",i=t&&n!==1?' start="'+n+'"':"";return"<"+r+i+`>
+`+s+"</"+r+`>
+`}listitem(e){return`<li>${this.parser.parse(e.tokens)}</li>
+`}checkbox({checked:e}){return"<input "+(e?'checked="" ':"")+'disabled="" type="checkbox"> '}paragraph({tokens:e}){return`<p>${this.parser.parseInline(e)}</p>
+`}table(e){let t="",n="";for(let r=0;r<e.header.length;r++)n+=this.tablecell(e.header[r]);t+=this.tablerow({text:n});let s="";for(let r=0;r<e.rows.length;r++){let i=e.rows[r];n="";for(let o=0;o<i.length;o++)n+=this.tablecell(i[o]);s+=this.tablerow({text:n})}return s&&(s=`<tbody>${s}</tbody>`),`<table>
+<thead>
+`+t+`</thead>
+`+s+`</table>
+`}tablerow({text:e}){return`<tr>
+${e}</tr>
+`}tablecell(e){let t=this.parser.parseInline(e.tokens),n=e.header?"th":"td";return(e.align?`<${n} align="${e.align}">`:`<${n}>`)+t+`</${n}>
+`}strong({tokens:e}){return`<strong>${this.parser.parseInline(e)}</strong>`}em({tokens:e}){return`<em>${this.parser.parseInline(e)}</em>`}codespan({text:e}){return`<code>${O(e,!0)}</code>`}br(e){return"<br>"}del({tokens:e}){return`<del>${this.parser.parseInline(e)}</del>`}link({href:e,title:t,tokens:n}){let s=this.parser.parseInline(n),r=Y(e);if(r===null)return s;e=r;let i='<a href="'+e+'"';return t&&(i+=' title="'+O(t)+'"'),i+=">"+s+"</a>",i}image({href:e,title:t,text:n,tokens:s}){s&&(n=this.parser.parseInline(s,this.parser.textRenderer));let r=Y(e);if(r===null)return O(n);e=r;let i=`<img src="${e}" alt="${O(n)}"`;return t&&(i+=` title="${O(t)}"`),i+=">",i}text(e){return"tokens"in e&&e.tokens?this.parser.parseInline(e.tokens):"escaped"in e&&e.escaped?e.text:O(e.text)}};var S=class{strong({text:e}){return e}em({text:e}){return e}codespan({text:e}){return e}del({text:e}){return e}html({text:e}){return e}text({text:e}){return e}link({text:e}){return""+e}image({text:e}){return""+e}br(){return""}checkbox({raw:e}){return e}};var b=class l{options;renderer;textRenderer;constructor(e){this.options=e||T,this.options.renderer=this.options.renderer||new y,this.renderer=this.options.renderer,this.renderer.options=this.options,this.renderer.parser=this,this.textRenderer=new S}static parse(e,t){return new l(t).parse(e)}static parseInline(e,t){return new l(t).parseInline(e)}parse(e){this.renderer.parser=this;let t="";for(let n=0;n<e.length;n++){let s=e[n];if(this.options.extensions?.renderers?.[s.type]){let i=s,o=this.options.extensions.renderers[i.type].call({parser:this},i);if(o!==!1||!["space","hr","heading","code","table","blockquote","list","html","def","paragraph","text"].includes(i.type)){t+=o||"";continue}}let r=s;switch(r.type){case"space":{t+=this.renderer.space(r);break}case"hr":{t+=this.renderer.hr(r);break}case"heading":{t+=this.renderer.heading(r);break}case"code":{t+=this.renderer.code(r);break}case"table":{t+=this.renderer.table(r);break}case"blockquote":{t+=this.renderer.blockquote(r);break}case"list":{t+=this.renderer.list(r);break}case"checkbox":{t+=this.renderer.checkbox(r);break}case"html":{t+=this.renderer.html(r);break}case"def":{t+=this.renderer.def(r);break}case"paragraph":{t+=this.renderer.paragraph(r);break}case"text":{t+=this.renderer.text(r);break}default:{let i='Token with "'+r.type+'" type was not found.';if(this.options.silent)return console.error(i),"";throw new Error(i)}}}return t}parseInline(e,t=this.renderer){this.renderer.parser=this;let n="";for(let s=0;s<e.length;s++){let r=e[s];if(this.options.extensions?.renderers?.[r.type]){let o=this.options.extensions.renderers[r.type].call({parser:this},r);if(o!==!1||!["escape","html","link","image","strong","em","codespan","br","del","text"].includes(r.type)){n+=o||"";continue}}let i=r;switch(i.type){case"escape":{n+=t.text(i);break}case"html":{n+=t.html(i);break}case"link":{n+=t.link(i);break}case"image":{n+=t.image(i);break}case"checkbox":{n+=t.checkbox(i);break}case"strong":{n+=t.strong(i);break}case"em":{n+=t.em(i);break}case"codespan":{n+=t.codespan(i);break}case"br":{n+=t.br(i);break}case"del":{n+=t.del(i);break}case"text":{n+=t.text(i);break}default:{let o='Token with "'+i.type+'" type was not found.';if(this.options.silent)return console.error(o),"";throw new Error(o)}}}return n}};var P=class{options;block;constructor(e){this.options=e||T}static passThroughHooks=new Set(["preprocess","postprocess","processAllTokens","emStrongMask"]);static passThroughHooksRespectAsync=new Set(["preprocess","postprocess","processAllTokens"]);preprocess(e){return e}postprocess(e){return e}processAllTokens(e){return e}emStrongMask(e){return e}provideLexer(e=this.block){return e?x.lex:x.lexInline}provideParser(e=this.block){return e?b.parse:b.parseInline}};var C=class{defaults=_();options=this.setOptions;parse=this.parseMarkdown(!0);parseInline=this.parseMarkdown(!1);Parser=b;Renderer=y;TextRenderer=S;Lexer=x;Tokenizer=w;Hooks=P;constructor(...e){this.use(...e)}walkTokens(e,t){let n=[];for(let s of e)switch(n=n.concat(t.call(this,s)),s.type){case"table":{let r=s;for(let i of r.header)n=n.concat(this.walkTokens(i.tokens,t));for(let i of r.rows)for(let o of i)n=n.concat(this.walkTokens(o.tokens,t));break}case"list":{let r=s;n=n.concat(this.walkTokens(r.items,t));break}default:{let r=s;this.defaults.extensions?.childTokens?.[r.type]?this.defaults.extensions.childTokens[r.type].forEach(i=>{let o=r[i].flat(1/0);n=n.concat(this.walkTokens(o,t))}):r.tokens&&(n=n.concat(this.walkTokens(r.tokens,t)))}}return n}use(...e){let t=this.defaults.extensions||{renderers:{},childTokens:{}};return e.forEach(n=>{let s={...n};if(s.async=this.defaults.async||s.async||!1,n.extensions&&(n.extensions.forEach(r=>{if(!r.name)throw new Error("extension name required");if("renderer"in r){let i=t.renderers[r.name];i?t.renderers[r.name]=function(...o){let u=r.renderer.apply(this,o);return u===!1&&(u=i.apply(this,o)),u}:t.renderers[r.name]=r.renderer}if("tokenizer"in r){if(!r.level||r.level!=="block"&&r.level!=="inline")throw new Error("extension level must be 'block' or 'inline'");let i=t[r.level];i?i.unshift(r.tokenizer):t[r.level]=[r.tokenizer],r.start&&(r.level==="block"?t.startBlock?t.startBlock.push(r.start):t.startBlock=[r.start]:r.level==="inline"&&(t.startInline?t.startInline.push(r.start):t.startInline=[r.start]))}"childTokens"in r&&r.childTokens&&(t.childTokens[r.name]=r.childTokens)}),s.extensions=t),n.renderer){let r=this.defaults.renderer||new y(this.defaults);for(let i in n.renderer){if(!(i in r))throw new Error(`renderer '${i}' does not exist`);if(["options","parser"].includes(i))continue;let o=i,u=n.renderer[o],a=r[o];r[o]=(...c)=>{let p=u.apply(r,c);return p===!1&&(p=a.apply(r,c)),p||""}}s.renderer=r}if(n.tokenizer){let r=this.defaults.tokenizer||new w(this.defaults);for(let i in n.tokenizer){if(!(i in r))throw new Error(`tokenizer '${i}' does not exist`);if(["options","rules","lexer"].includes(i))continue;let o=i,u=n.tokenizer[o],a=r[o];r[o]=(...c)=>{let p=u.apply(r,c);return p===!1&&(p=a.apply(r,c)),p}}s.tokenizer=r}if(n.hooks){let r=this.defaults.hooks||new P;for(let i in n.hooks){if(!(i in r))throw new Error(`hook '${i}' does not exist`);if(["options","block"].includes(i))continue;let o=i,u=n.hooks[o],a=r[o];P.passThroughHooks.has(i)?r[o]=c=>{if(this.defaults.async&&P.passThroughHooksRespectAsync.has(i))return(async()=>{let k=await u.call(r,c);return a.call(r,k)})();let p=u.call(r,c);return a.call(r,p)}:r[o]=(...c)=>{if(this.defaults.async)return(async()=>{let k=await u.apply(r,c);return k===!1&&(k=await a.apply(r,c)),k})();let p=u.apply(r,c);return p===!1&&(p=a.apply(r,c)),p}}s.hooks=r}if(n.walkTokens){let r=this.defaults.walkTokens,i=n.walkTokens;s.walkTokens=function(o){let u=[];return u.push(i.call(this,o)),r&&(u=u.concat(r.call(this,o))),u}}this.defaults={...this.defaults,...s}}),this}setOptions(e){return this.defaults={...this.defaults,...e},this}lexer(e,t){return x.lex(e,t??this.defaults)}parser(e,t){return b.parse(e,t??this.defaults)}parseMarkdown(e){return(n,s)=>{let r={...s},i={...this.defaults,...r},o=this.onError(!!i.silent,!!i.async);if(this.defaults.async===!0&&r.async===!1)return o(new Error("marked(): The async option was set to true by an extension. Remove async: false from the parse options object to return a Promise."));if(typeof n>"u"||n===null)return o(new Error("marked(): input parameter is undefined or null"));if(typeof n!="string")return o(new Error("marked(): input parameter is of type "+Object.prototype.toString.call(n)+", string expected"));if(i.hooks&&(i.hooks.options=i,i.hooks.block=e),i.async)return(async()=>{let u=i.hooks?await i.hooks.preprocess(n):n,c=await(i.hooks?await i.hooks.provideLexer(e):e?x.lex:x.lexInline)(u,i),p=i.hooks?await i.hooks.processAllTokens(c):c;i.walkTokens&&await Promise.all(this.walkTokens(p,i.walkTokens));let h=await(i.hooks?await i.hooks.provideParser(e):e?b.parse:b.parseInline)(p,i);return i.hooks?await i.hooks.postprocess(h):h})().catch(o);try{i.hooks&&(n=i.hooks.preprocess(n));let a=(i.hooks?i.hooks.provideLexer(e):e?x.lex:x.lexInline)(n,i);i.hooks&&(a=i.hooks.processAllTokens(a)),i.walkTokens&&this.walkTokens(a,i.walkTokens);let p=(i.hooks?i.hooks.provideParser(e):e?b.parse:b.parseInline)(a,i);return i.hooks&&(p=i.hooks.postprocess(p)),p}catch(u){return o(u)}}}onError(e,t){return n=>{if(n.message+=`
+Please report this to https://github.com/markedjs/marked.`,e){let s="<p>An error occurred:</p><pre>"+O(n.message+"",!0)+"</pre>";return t?Promise.resolve(s):s}if(t)return Promise.reject(n);throw n}}};var M=new C;function g(l,e){return M.parse(l,e)}g.options=g.setOptions=function(l){return M.setOptions(l),g.defaults=M.defaults,Q(g.defaults),g};g.getDefaults=_;g.defaults=T;g.use=function(...l){return M.use(...l),g.defaults=M.defaults,Q(g.defaults),g};g.walkTokens=function(l,e){return M.walkTokens(l,e)};g.parseInline=M.parseInline;g.Parser=b;g.parser=b.parse;g.Renderer=y;g.TextRenderer=S;g.Lexer=x;g.lexer=x.lex;g.Tokenizer=w;g.Hooks=P;g.parse=g;var ht=g.options,kt=g.setOptions,dt=g.use,gt=g.walkTokens,ft=g.parseInline,mt=g,xt=b.parse,bt=x.lex;
+
+if(__exports != exports)module.exports = exports;return module.exports}));
+//# sourceMappingURL=marked.umd.js.map
+</script>
+<script>(function(){
+  var $=function(id){return document.getElementById(id);};
+  var pad=function(n){return String(n).padStart(2,'0');};
+  setInterval(function(){var d=new Date();var c=$('clock');if(c)c.textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());},1000);
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});}
+  function diffClass(d){d=(d||'').toLowerCase();
+    if(/f[áa]cil|easy/.test(d))return'easy';
+    if(/media|medium|medio/.test(d))return'medium';
+    if(/dif[íi]cil|hard/.test(d))return'hard';
+    if(/insane|demente/.test(d))return'insane';return'easy';}
+  function parseFM(raw){
+    raw=raw.replace(/^﻿/,'');
+    var m=raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?/);
+    var meta={},body=raw;
+    if(m){body=raw.slice(m[0].length);
+      m[1].split('\n').forEach(function(line){
+        var i=line.indexOf(':');if(i<0)return;
+        var k=line.slice(0,i).trim();var v=line.slice(i+1).trim();
+        v=v.replace(/^["']|["']$/g,'');meta[k]=v;});}
+    return {meta:meta,body:body};
+  }
+  async function main(){
+    var slug=new URLSearchParams(location.search).get('p');
+    if(!slug){$('md').innerHTML='<p class="empty">Falta ?p=nombre en la URL. Vuelve al <a href="writeups.html">índice</a>.</p>';return;}
+    var raw;
+    try{var r=await fetch('writeups/'+slug+'.md');if(!r.ok)throw 0;raw=await r.text();}
+    catch(e){$('md').innerHTML='<p class="empty">No encuentro <code>writeups/'+esc(slug)+'.md</code>. Revisa el nombre. <a href="writeups.html">Volver</a>.</p>';return;}
+    var pf=parseFM(raw),meta=pf.meta;
+    var name=meta.machine||meta.title||slug;
+    document.title='pelud1n — '+name;
+    $('wu-title').textContent=name;
+    $('wu-eyebrow').textContent='// '+(meta.platform||'writeup')+(meta.difficulty?' · '+meta.difficulty:'');
+    var h='';
+    if(meta.platform)h+='<span class="badge plat">'+esc(meta.platform)+'</span>';
+    if(meta.difficulty)h+='<span class="badge '+diffClass(meta.difficulty)+'">'+esc(meta.difficulty)+'</span>';
+    if(meta.os)h+='<span class="chip"><b>OS</b> '+esc(meta.os)+'</span>';
+    if(meta.ip)h+='<span class="chip"><b>IP</b> '+esc(meta.ip)+'</span>';
+    if(meta.date)h+='<span class="chip"><b>fecha</b> '+esc(meta.date)+'</span>';
+    if(meta.points)h+='<span class="chip"><b>pts</b> '+esc(meta.points)+'</span>';
+    $('wu-meta').innerHTML=h;
+    var tags=(meta.tags||'').replace(/^\[|\]$/g,'').split(',').map(function(s){return s.trim();}).filter(Boolean);
+    $('wu-tags').innerHTML=tags.map(function(t){return '<span>#'+esc(t)+'</span>';}).join('');
+    marked.setOptions({gfm:true,breaks:false});
+    $('md').innerHTML=marked.parse(pf.body);
+  }
+  main();
+})();
+</script>
+</body></html>

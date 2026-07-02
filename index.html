@@ -3998,31 +3998,19 @@ function Notes() {
   const posts = [{
     plat: 'HTB',
     tone: 'mint',
-    title: 'Writeups de máquinas de HackTheBox',
-    tags: ['htb', 'pentesting'],
-    date: 'próximamente',
-    read: 'pronto'
+    title: 'Ejemplo — plantilla de writeup',
+    tags: ['ejemplo', 'plantilla'],
+    date: '2026-07-02',
+    read: 'leer',
+    href: 'writeup.html?p=htb-ejemplo'
   }, {
-    plat: 'THM',
-    tone: 'mint',
-    title: 'TryHackMe — rooms y rutas de aprendizaje',
-    tags: ['thm', 'labs'],
-    date: 'próximamente',
-    read: 'pronto'
-  }, {
-    plat: 'AD',
-    tone: 'violet',
-    title: 'Active Directory: de la enumeración a Domain Admin',
-    tags: ['active-directory', 'lateral'],
-    date: 'próximamente',
-    read: 'pronto'
-  }, {
-    plat: 'CLOUD',
+    plat: 'WU',
     tone: 'red',
-    title: 'Seguridad en cloud y fundamentos DevSecOps',
-    tags: ['cloud', 'devsecops'],
-    date: 'próximamente',
-    read: 'pronto'
+    title: 'Ver todos los writeups',
+    tags: ['índice'],
+    date: '',
+    read: 'abrir',
+    href: 'writeups.html'
   }];
   return /*#__PURE__*/React.createElement("section", {
     id: "notes",
@@ -4045,7 +4033,7 @@ function Notes() {
     }
   }, posts.map((p, i) => /*#__PURE__*/React.createElement("a", {
     key: p.title,
-    href: "#",
+    href: p.href,
     style: {
       display: 'flex',
       alignItems: 'center',

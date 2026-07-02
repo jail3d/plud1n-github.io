@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pelud1n — writeups</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Saira+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,800;1,900&family=Saira:wght@400;500;600;700&family=VT323&family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* ============================================================
+   pelud1n — COLOR TOKENS  ·  DEDSEC-style rework
+   Black + bone + muted blood red. Solid, dark, 1-bit, NO neon.
+   Desaturated olive + bruise-purple are GLITCH accents only.
+
+   Token NAMES are preserved from the previous system on purpose:
+   old --mint/--violet/--slate/--glow references are remapped at the
+   bottom so the whole kit recolors automatically (mint→blood,
+   violet→bruise, glows→off). Author NEW work against the named
+   tokens below (--blood, --bone, --ink, --toxic, --bruise).
+   ============================================================ */
+:root {
+  /* ---- INK — neutral, faintly-warm near-black ramp ----------- */
+  --ink-1000: #050506;
+  --ink-950:  #0A0A0B;   /* app background            */
+  --ink-900:  #0F0F11;   /* elevated background       */
+  --ink-850:  #141416;   /* surface / card            */
+  --ink-800:  #1B1B1E;   /* surface hover             */
+  --ink-750:  #232327;   /* surface active / inset    */
+  --ink-700:  #2D2D32;   /* hairline strong           */
+  --ink-600:  #3B3B42;   /* divider strong            */
+  --ink-500:  #4F4F58;   /* disabled stroke           */
+  --ink-400:  #6B6B75;   /* text tertiary / icon dim  */
+  --ink-300:  #8A8A94;
+
+  /* ---- BONE — warm off-white (the "white" of the 1-bit art) -- */
+  --bone-050: #ECE7DB;   /* primary text              */
+  --bone-100: #D9D3C5;
+  --bone-200: #B7B1A1;
+  --bone-300: #8F897B;   /* secondary text            */
+  --bone-400: #6C6759;   /* tertiary text             */
+  --bone-pure:#F4F1E9;   /* max-contrast highlight    */
+
+  /* ---- BLOOD — primary signal (muted, solid, not neon) ------- */
+  --blood-bright: #D8333F;   /* hover / active edge   */
+  --blood:        #B5202C;   /* base accent           */
+  --blood-deep:   #7C1620;   /* pressed / shadow       */
+  --blood-dark:   #4E0E15;   /* deepest fill           */
+  --blood-soft:   rgba(181, 32, 44, 0.16);
+  --blood-line:   rgba(181, 32, 44, 0.55);
+
+  /* ---- Glitch accents — DESATURATED, used sparingly ---------- */
+  --toxic:      #7E8A55;     /* dithered olive / sage  */
+  --toxic-soft: rgba(126, 138, 85, 0.16);
+  --toxic-line: rgba(126, 138, 85, 0.5);
+  --bruise:      #6E5F84;    /* muted purple           */
+  --bruise-soft: rgba(110, 95, 132, 0.18);
+  --bruise-line: rgba(110, 95, 132, 0.5);
+  --rust:    #B5532A;        /* high severity          */
+  --mustard: #C49A3C;        /* medium severity        */
+
+  /* ============================================================
+     SEMANTIC ALIASES — reference these in product code.
+     ============================================================ */
+  --color-bg:            var(--ink-950);
+  --color-bg-elevated:   var(--ink-900);
+  --color-surface:       var(--ink-850);
+  --color-surface-hover: var(--ink-800);
+  --color-surface-active:var(--ink-750);
+  --color-surface-inset: var(--ink-1000);
+
+  --color-text:          var(--bone-050);
+  --color-text-secondary:var(--bone-300);
+  --color-text-tertiary: var(--bone-400);
+  --color-text-disabled: var(--ink-500);
+  --color-text-on-accent:var(--bone-pure);   /* on blood fill */
+  --color-text-on-bone:  var(--ink-1000);    /* on bone fill  */
+
+  --color-border:        rgba(236, 231, 219, 0.12);
+  --color-border-strong: rgba(236, 231, 219, 0.22);
+  --color-border-faint:  rgba(236, 231, 219, 0.06);
+
+  --color-accent:        var(--blood);
+  --color-accent-hover:  var(--blood-bright);
+  --color-accent-press:  var(--blood-deep);
+  --color-accent-2:      var(--bone-050);     /* bone = high-contrast 2nd accent */
+  --color-danger:        var(--blood-bright);
+
+  --color-link:          var(--blood-bright);
+  --color-link-hover:    var(--bone-pure);
+
+  --color-selection:     rgba(181, 32, 44, 0.42);
+  --color-focus:         var(--blood-bright);
+
+  /* ---- Severity / status (gritty, muted) -------------------- */
+  --sev-critical: var(--blood-bright);
+  --sev-high:     var(--rust);
+  --sev-medium:   var(--mustard);
+  --sev-low:      var(--toxic);
+  --sev-info:     var(--bruise);
+  --sev-critical-soft: var(--blood-soft);
+  --sev-high-soft:     rgba(181, 83, 42, 0.16);
+  --sev-medium-soft:   rgba(196, 154, 60, 0.16);
+  --sev-low-soft:      var(--toxic-soft);
+  --sev-info-soft:     var(--bruise-soft);
+
+  /* ============================================================
+     BACKWARD-COMPAT REMAPS — keep old files on-palette.
+     (mint → blood, violet → bruise, slate → ink, glows → off)
+     ============================================================ */
+  --slate-1000: var(--ink-1000); --slate-950: var(--ink-950); --slate-900: var(--ink-900);
+  --slate-850: var(--ink-850);  --slate-800: var(--ink-800); --slate-750: var(--ink-750);
+  --slate-700: var(--ink-700);  --slate-600: var(--ink-600); --slate-500: var(--ink-500);
+  --slate-400: var(--ink-400);  --slate-300: var(--bone-300); --slate-200: var(--bone-200);
+  --slate-100: var(--bone-100); --slate-050: var(--bone-050);
+
+  --mint-bright: var(--blood-bright); --mint: var(--blood); --mint-deep: var(--blood-deep);
+  --mint-soft: var(--blood-soft); --mint-line: var(--blood-line); --mint-glow: transparent;
+
+  --violet-bright: #8A79A0; --violet: var(--bruise); --violet-deep: #574A68;
+  --violet-soft: var(--bruise-soft); --violet-line: var(--bruise-line); --violet-glow: transparent;
+
+  --red-bright: var(--blood-bright); --red: var(--blood); --red-deep: var(--blood-deep);
+  --red-soft: var(--blood-soft); --red-line: var(--blood-line); --red-glow: transparent;
+}
+
+/* ============================================================
+   pelud1n — TYPOGRAPHY TOKENS  ·  DEDSEC-style rework
+   Pixel voice (Silkscreen) + condensed slogans (Saira Condensed)
+   + BBS terminal (VT323) + mono (JetBrains) + body (Saira).
+   ============================================================ */
+:root {
+  /* ---- Families ---------------------------------------------- */
+  --font-pixel:    'Silkscreen', 'JetBrains Mono', ui-monospace, monospace;
+  --font-display:  'Saira Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --font-terminal: 'VT323', 'JetBrains Mono', ui-monospace, monospace;
+  --font-mono:     'JetBrains Mono', ui-monospace, 'DejaVu Sans Mono', monospace;
+  --font-sans:     'Saira', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* ---- Weights ----------------------------------------------- */
+  --weight-regular:   400;
+  --weight-medium:    500;
+  --weight-semibold:  600;
+  --weight-bold:      700;
+  --weight-extrabold: 800;
+  --weight-black:     900;
+
+  /* ---- Display scale (Saira Condensed — runs big & tight) ---- */
+  --text-display-2xl: 116px;
+  --text-display-xl:  84px;
+  --text-display-lg:  60px;
+  --text-display-md:  42px;
+  --text-display-sm:  30px;
+
+  /* ---- Pixel scale (Silkscreen — keep multiples for crisp px) */
+  --text-pixel-lg: 32px;
+  --text-pixel-md: 20px;
+  --text-pixel-sm: 14px;
+  --text-pixel-xs: 10px;   /* HUD micro labels, window titles */
+
+  /* ---- Text / body scale (Saira) ----------------------------- */
+  --text-heading:  20px;
+  --text-body-lg:  18px;
+  --text-body:     15px;
+  --text-body-sm:  13px;
+  --text-caption:  12px;
+  --text-micro:    11px;
+
+  /* ---- Line heights ------------------------------------------ */
+  --leading-none:    1;
+  --leading-tight:   1.05;
+  --leading-snug:    1.25;
+  --leading-normal:  1.55;
+  --leading-relaxed: 1.7;
+
+  /* ---- Letter spacing ---------------------------------------- */
+  --tracking-tighter: -0.04em;
+  --tracking-tight:   -0.02em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.04em;
+  --tracking-wider:   0.10em;
+  --tracking-widest:  0.20em;   /* pixel / HUD labels */
+}
+
+/* ============================================================
+   pelud1n — SPACING & LAYOUT TOKENS
+   4px base grid — keeps everything aligned to the rejilla.
+   ============================================================ */
+:root {
+  --space-0:   0;
+  --space-px:  1px;
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-7:   28px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-14:  56px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+  --space-32:  128px;
+  --space-40:  160px;
+
+  /* ---- Layout ------------------------------------------------ */
+  --container-sm:  640px;
+  --container-md:  840px;
+  --container-lg:  1080px;
+  --container-xl:  1280px;
+  --gutter:        24px;
+  --section-y:     96px;   /* vertical rhythm between page sections */
+
+  /* ---- Control sizing (height of buttons, inputs, etc.) ------ */
+  --control-sm: 30px;
+  --control-md: 38px;
+  --control-lg: 46px;
+}
+
+/* ============================================================
+   pelud1n — EFFECTS TOKENS  ·  DEDSEC-style rework
+   Sharp/pixel corners, hard 1-bit shadows, dither + scanlines +
+   halftone textures, glitch splits. NO neon glow (kept as no-ops).
+   ============================================================ */
+:root {
+  /* ---- Radii — pixel/stencil: mostly square ------------------ */
+  --radius-none: 0;
+  --radius-sm:   1px;
+  --radius-md:   2px;
+  --radius-lg:   3px;
+  --radius-xl:   4px;
+  --radius-pill: 999px;
+
+  /* ---- Border widths ----------------------------------------- */
+  --border-hairline: 1px;
+  --border-thick:    2px;
+  --border-heavy:    3px;
+
+  /* ---- Shadows — hard-edged "pixel" drops + deep ambient ----- */
+  --shadow-pixel:    4px 4px 0 0 #000;
+  --shadow-pixel-sm: 2px 2px 0 0 #000;
+  --shadow-pixel-blood: 4px 4px 0 0 var(--blood-deep);
+  --shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-md:    0 10px 28px rgba(0, 0, 0, 0.6);
+  --shadow-lg:    0 22px 60px rgba(0, 0, 0, 0.72);
+  --shadow-inset: inset 0 0 0 1px rgba(236, 231, 219, 0.04);
+
+  /* ---- Glitch — channel-split offsets (replace the old glows) - */
+  --glitch-text:    2px 0 var(--blood), -2px 0 var(--bone-200);
+  --glitch-text-sm: 1px 0 var(--blood), -1px 0 var(--toxic);
+  --glitch-box:     -3px 0 0 var(--blood-soft), 3px 0 0 var(--bruise-soft);
+
+  /* ---- NEON GLOWS — disabled (kept so old refs don't break) --- */
+  --glow-mint: 0 0 0 0 transparent;       /* @kind shadow */
+  --glow-mint-sm: 0 0 0 0 transparent;    /* @kind shadow */
+  --glow-violet: 0 0 0 0 transparent;     /* @kind shadow */
+  --glow-red: 0 0 0 0 transparent;        /* @kind shadow */
+  --glow-text-mint: none;  --glow-text-violet: none;  --glow-text-red: none;
+
+  /* ---- Focus ring -------------------------------------------- */
+  --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--blood-bright);
+
+  /* ---- Textures ---------------------------------------------- */
+  /* Generated 1-bit tiles (originals, made with canvas). */
+  --tex-dither:   url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAVElEQVR4AXSOsQ3AIBAD0c+QJgNkuQzEcgxAwxBwxbkDyTLG9vO15ujtnBvX837/8duNCxM4gTtQJ+AETKDODjwCm3J2wAQ25XxhgxBQJ2ADE6g3AAAA///Yln29AAAABklEQVQDACNRLBE6GmRlAAAAAElFTkSuQmCC");     /* @kind other */
+  --tex-noise:    url("data:image/png;base64,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");      /* @kind other */
+  --tex-halftone: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAQ0lEQVR4AXSKsQkAIAwERRsbh8hujuVuGcImjSD3oIVg4ODIfU6fu8HdK5ydAo9WVwecqIC8KJhZzCgDcEYKCA/AYQMAAP//zpl0TwAAAAZJREFUAwBsfhgNZVeCawAAAABJRU5ErkJggg==");   /* @kind other */
+
+  /* CSS-only fallbacks / overlays */
+  --scanlines: repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.34) 2px 3px); /* @kind other */
+  --scanlines-soft: repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 3px, rgba(0,0,0,0.18) 3px 4px); /* @kind other */
+  --halftone-dots: radial-gradient(rgba(236,231,219,0.5) 0.5px, transparent 1.1px); /* @kind other */
+  --halftone-size: 4px 4px;
+
+  /* ---- The rejilla (now a faint bone grid) ------------------- */
+  --grid-line: rgba(236, 231, 219, 0.045);
+  --grid-size: 36px;
+  --grid-image:
+    linear-gradient(var(--grid-line) var(--border-hairline), transparent var(--border-hairline)),
+    linear-gradient(90deg, var(--grid-line) var(--border-hairline), transparent var(--border-hairline));
+
+  /* ---- HUD corner ticks -------------------------------------- */
+  --tick-size:   12px;
+  --tick-weight: 2px;
+  --tick-color:  var(--blood-line);
+  --tick-inset:  0px;
+
+  /* ---- Motion — snappy, glitchy ------------------------------ */
+  --ease-out:    cubic-bezier(0.16, 1, 0.30, 1);   /* @kind other */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* @kind other */
+  --ease-snap:   steps(2, end);                    /* @kind other */
+  --ease-glitch: steps(3, end);                    /* @kind other */
+  --duration-fast: 90ms;    /* @kind other */
+  --duration-base: 160ms;   /* @kind other */
+  --duration-slow: 320ms;   /* @kind other */
+}
+
+/* ============================================================
+   pelud1n — BASE / RESET  ·  DEDSEC-style rework
+   Black canvas, bone text. Opt-in helpers for the 1-bit world:
+   .dither-bg .scanlines .halftone .crt .glitch  +  .pl-window chrome.
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-regular);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--color-selection); color: var(--bone-pure); }
+
+/* Blocky scrollbar */
+* { scrollbar-width: thin; scrollbar-color: var(--ink-700) transparent; }
+*::-webkit-scrollbar { width: 12px; height: 12px; }
+*::-webkit-scrollbar-thumb { background: var(--ink-700); border: 3px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: var(--ink-600); background-clip: content-box; }
+
+a { color: var(--color-link); text-decoration: none; }
+a:hover { color: var(--color-link-hover); }
+
+/* ---- Font helpers ------------------------------------------ */
+.pixel    { font-family: var(--font-pixel); }
+.display  { font-family: var(--font-display); }
+.terminal { font-family: var(--font-terminal); }
+.mono     { font-family: var(--font-mono); }
+.sans     { font-family: var(--font-sans); }
+
+/* ---- Backgrounds / textures -------------------------------- */
+.peludin-grid {
+  background-image: var(--grid-image);
+  background-size: var(--grid-size) var(--grid-size);
+}
+.dither-bg {
+  background-color: var(--color-bg);
+  background-image: var(--tex-dither);
+  background-repeat: repeat;
+}
+.halftone {
+  background-image: var(--halftone-dots);
+  background-size: var(--halftone-size);
+}
+/* Scanline + vignette overlay — put on a positioned ::after host */
+.scanlines { position: relative; }
+.scanlines::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 5;
+  background: var(--scanlines); mix-blend-mode: multiply;
+}
+.crt { position: relative; }
+.crt::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 6;
+  background:
+    var(--scanlines),
+    radial-gradient(120% 120% at 50% 50%, transparent 60%, rgba(0,0,0,0.55) 100%);
+}
+
+/* ---- Glitch text (set data-text="..." to match content) ----- */
+.glitch { position: relative; display: inline-block; }
+.glitch::before, .glitch::after {
+  content: attr(data-text); position: absolute; left: 0; top: 0; width: 100%;
+  pointer-events: none; opacity: 0.85;
+}
+.glitch::before { color: var(--blood);  transform: translate(-2px, 0); clip-path: inset(0 0 52% 0); }
+.glitch::after  { color: var(--toxic);  transform: translate(2px, 0);  clip-path: inset(52% 0 0 0); }
+.glitch--live::before { animation: pl-glitch 2.4s var(--ease-glitch) infinite; }
+.glitch--live::after  { animation: pl-glitch 2.4s var(--ease-glitch) infinite reverse; }
+
+/* ---- Block cursor (bone by default; add .blood for red) ----- */
+.pl-cursor { display: inline-block; width: 0.55em; height: 0.82em; background: var(--bone-pure);
+  transform: translateY(0.06em); margin-left: 0.06em; }
+.pl-cursor.blood { background: var(--blood); }
+.pl-cursor.blink { animation: peludin-blink 1.05s steps(1) infinite; }
+
+/* ---- Win9x-style window chrome ----------------------------- */
+.pl-window {
+  background: var(--color-surface); border: 1px solid var(--bone-200);
+  box-shadow: var(--shadow-pixel); border-radius: 0;
+}
+.pl-window__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 4px 5px 4px 8px; background: var(--blood); color: var(--bone-pure);
+  font-family: var(--font-pixel); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.pl-window__bar--inert { background: var(--ink-700); color: var(--bone-200); }
+.pl-window__x {
+  width: 16px; height: 14px; flex: 0 0 auto; display: grid; place-items: center;
+  background: var(--ink-850); border: 1px solid var(--bone-300); color: var(--bone-050);
+  font-family: var(--font-pixel); font-size: 9px; cursor: pointer;
+}
+.pl-window__body { padding: 14px; }
+
+/* HUD corner-tick frame */
+.hud-frame { position: relative; }
+.hud-frame::before, .hud-frame::after {
+  content: ""; position: absolute; width: var(--tick-size); height: var(--tick-size); pointer-events: none;
+}
+.hud-frame::before { top: var(--tick-inset); left: var(--tick-inset);
+  border-top: var(--tick-weight) solid var(--tick-color); border-left: var(--tick-weight) solid var(--tick-color); }
+.hud-frame::after { top: var(--tick-inset); right: var(--tick-inset);
+  border-top: var(--tick-weight) solid var(--tick-color); border-right: var(--tick-weight) solid var(--tick-color); }
+
+/* ---- Keyframes --------------------------------------------- */
+@keyframes peludin-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes pl-glitch {
+  0%, 100% { transform: translate(-2px, 0); }
+  20% { transform: translate(2px, -1px); }
+  40% { transform: translate(-1px, 1px); }
+  60% { transform: translate(3px, 0); }
+  80% { transform: translate(-2px, -1px); }
+}
+@keyframes pl-flicker {
+  0%, 100% { opacity: 1; } 92% { opacity: 1; } 93% { opacity: 0.4; } 95% { opacity: 1; } 97% { opacity: 0.7; }
+}
+@keyframes pl-scanroll { 0% { background-position-y: 0; } 100% { background-position-y: 100px; } }
+
+/* pelud1n — writeups (mismo sistema de diseño) */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--ink-950);color:var(--bone-050);font-family:var(--font-sans);min-height:100vh;position:relative;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(236,231,219,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(236,231,219,.045) 1px,transparent 1px),var(--tex-dither);
+  background-size:40px 40px,40px 40px,auto;opacity:.7}
+body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.30) 2px 3px);mix-blend-mode:multiply;opacity:.32}
+a{color:var(--blood-bright);text-decoration:none}
+a:hover{color:var(--bone-pure)}
+
+/* ---- top bar ---- */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;height:52px;padding:0 18px;
+  background:rgba(10,10,11,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--color-border-strong)}
+.topbar .mk{width:30px;height:30px;image-rendering:pixelated}
+.topbar .wm{font-family:var(--font-pixel);font-size:16px;color:var(--bone-pure)}
+.topbar .wm .one{color:var(--blood-bright)}
+.topbar nav{display:flex;gap:2px;margin-left:8px}
+.topbar nav a{font-family:var(--font-pixel);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-secondary);padding:8px 11px}
+.topbar nav a:hover{color:var(--bone-050);background:var(--color-surface-hover)}
+.topbar nav a.on{color:var(--blood-bright)}
+.topbar nav a.on::before{content:"> ";color:var(--blood)}
+.topbar .clock{margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary)}
+
+/* ---- ticker ---- */
+.ticker{position:relative;z-index:1;overflow:hidden;background:var(--blood);border-top:1px solid var(--blood-deep);border-bottom:1px solid var(--blood-deep)}
+.ticker .run{display:inline-block;white-space:nowrap;animation:mq 28s linear infinite;font-family:var(--font-pixel);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--bone-pure);padding:5px 0}
+.ticker .run span{padding:0 16px}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---- window chrome ---- */
+.wrap{position:relative;z-index:1;max-width:940px;margin:32px auto;padding:0 20px}
+.cwin{background:var(--ink-900);border:1px solid var(--blood-line);box-shadow:5px 5px 0 0 var(--blood-deep)}
+.cwin__bar{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--ink-850);border-bottom:1px solid var(--blood-line);
+  font-family:var(--font-pixel);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bone-200)}
+.dot{width:10px;height:10px;background:var(--blood);display:inline-block}.dot.b{background:var(--bruise)}.dot.t{background:var(--toxic)}
+.cwin__body{padding:26px 30px 34px}
+
+/* ---- writeup metadata header ---- */
+.eyebrow{font-family:var(--font-pixel);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--blood-bright)}
+.wu-title{font-family:var(--font-display);font-weight:900;font-style:italic;font-size:52px;line-height:.95;text-transform:uppercase;color:var(--bone-pure);margin:10px 0 14px}
+.wu-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.badge{font-family:var(--font-pixel);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border:1px solid}
+.badge.plat{color:var(--bone-pure);background:var(--blood);border-color:var(--blood-deep)}
+.badge.easy{color:var(--toxic);border-color:var(--toxic-line)}
+.badge.medium{color:var(--mustard);border-color:rgba(196,154,60,.5)}
+.badge.hard{color:var(--rust);border-color:rgba(181,83,42,.5)}
+.badge.insane{color:var(--blood-bright);border-color:var(--blood-line)}
+.chip{font-family:var(--font-mono);font-size:13px;color:var(--bone-100);background:var(--ink-850);border:1px solid var(--blood-line);padding:4px 10px}
+.chip b{color:var(--bone-400);font-weight:500}
+.wu-tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:6px}
+.wu-tags span{font-family:var(--font-mono);font-size:12px;color:var(--color-text-tertiary)}
+.hr-blood{height:2px;background:var(--blood);border:0;margin:22px 0 6px;box-shadow:3px 3px 0 0 var(--blood-deep)}
+
+/* ---- article (markdown) ---- */
+.md{font-size:16px;line-height:1.75;color:var(--bone-050)}
+.md>*{margin:0 0 16px}
+.md h1{font-family:var(--font-display);font-weight:900;font-style:italic;text-transform:uppercase;font-size:34px;line-height:1.05;color:var(--bone-pure);margin:34px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--blood-line)}
+.md h2{font-family:var(--font-display);font-weight:800;text-transform:uppercase;font-size:26px;color:var(--blood-bright);margin:30px 0 12px;display:flex;align-items:center;gap:10px}
+.md h2::before{content:"//";font-family:var(--font-pixel);font-size:14px;color:var(--blood)}
+.md h3{font-family:var(--font-pixel);font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--bone-100);margin:24px 0 10px}
+.md h4{font-family:var(--font-sans);font-weight:700;font-size:17px;color:var(--bone-100);margin:20px 0 8px}
+.md p{color:var(--bone-100)}
+.md strong{color:var(--bone-pure)}
+.md em{color:var(--bone-200)}
+.md ul,.md ol{padding-left:24px;color:var(--bone-100)}
+.md li{margin:6px 0}
+.md ul li::marker{color:var(--blood-bright)}
+.md ol li::marker{color:var(--blood-bright);font-family:var(--font-mono)}
+.md blockquote{border-left:3px solid var(--blood);background:var(--blood-soft);padding:10px 16px;color:var(--bone-200);font-style:italic}
+.md a{border-bottom:1px solid var(--blood-line)}
+.md hr{height:1px;background:var(--color-border-strong);border:0;margin:26px 0}
+/* inline code */
+.md :not(pre)>code{font-family:var(--font-mono);font-size:.9em;color:var(--blood-bright);background:var(--ink-850);border:1px solid var(--blood-line);padding:1px 6px;border-radius:2px}
+/* code blocks — terminal window */
+.md pre{position:relative;background:var(--ink-1000);border:1px solid var(--blood-line);box-shadow:4px 4px 0 0 #000;padding:34px 16px 16px;overflow-x:auto;margin:18px 0}
+.md pre::before{content:"● ● ●";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding:0 12px;font-size:9px;letter-spacing:2px;color:var(--blood);background:var(--ink-850);border-bottom:1px solid var(--blood-line)}
+.md pre code{font-family:var(--font-mono);font-size:13.5px;line-height:1.6;color:var(--bone-100);background:none;border:0;padding:0}
+/* tables */
+.md table{width:100%;border-collapse:collapse;font-size:14px;margin:18px 0}
+.md th,.md td{border:1px solid var(--color-border-strong);padding:8px 12px;text-align:left}
+.md th{background:var(--ink-850);font-family:var(--font-pixel);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--bone-200)}
+.md td{color:var(--bone-100);font-family:var(--font-mono);font-size:13px}
+/* images / screenshots */
+.md img{max-width:100%;height:auto;display:block;margin:18px 0;border:1px solid var(--blood-line);box-shadow:5px 5px 0 0 var(--blood-deep)}
+
+/* ---- index list (writeups.html) ---- */
+.list a.row{display:flex;align-items:center;gap:16px;padding:16px 10px;border-top:1px solid var(--color-border);color:inherit;transition:background .12s}
+.list a.row:first-child{border-top:0}
+.list a.row:hover{background:var(--color-surface-hover)}
+.list .b{min-width:64px;text-align:center}
+.list .info{flex:1;min-width:0}
+.list .t{font-family:var(--font-mono);font-size:16px;font-weight:600;color:var(--bone-050)}
+.list .tags{display:flex;gap:9px;margin-top:4px;flex-wrap:wrap}
+.list .tags span{font-family:var(--font-mono);font-size:11px;color:var(--color-text-tertiary)}
+.list .right{text-align:right;font-family:var(--font-mono);font-size:11px;color:var(--color-text-tertiary);white-space:nowrap}
+.list .right .go{margin-top:3px;color:var(--blood-bright)}
+.empty{font-family:var(--font-mono);color:var(--color-text-tertiary);padding:20px 4px}
+
+/* ---- footer ---- */
+.foot{position:relative;z-index:1;border-top:1px solid var(--color-border-strong);background:var(--color-bg-elevated);margin-top:40px}
+.foot .in{max-width:940px;margin:0 auto;padding:24px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:var(--font-pixel);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-tertiary)}
+.back{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-pixel);font-size:11px;text-transform:uppercase;color:var(--blood-bright);margin-bottom:18px}
+
+@media(max-width:640px){.wu-title{font-size:38px}.cwin__body{padding:20px 16px}.topbar nav a{padding:8px 7px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+<a href="index.html" style="display:inline-flex;align-items:center;gap:9px"><svg class="mk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" shape-rendering="crispEdges" role="img" aria-label="pelud1n mark"><rect x="0.5" y="0.5" width="63" height="63" fill="#0A0A0B" stroke="#B5202C"></rect><g fill="none" stroke="#B5202C" stroke-width="2"><path d="M5 13 V5 H13 M51 5 H59 V13 M59 51 V59 H51 M13 59 H5 V51"></path></g><rect x="10" y="18" width="4" height="4" fill="#ECE7DB"></rect><rect x="14" y="18" width="4" height="4" fill="#ECE7DB"></rect><rect x="18" y="18" width="4" height="4" fill="#ECE7DB"></rect><rect x="22" y="18" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="22" width="4" height="4" fill="#ECE7DB"></rect><rect x="26" y="22" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="26" width="4" height="4" fill="#ECE7DB"></rect><rect x="26" y="26" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="30" width="4" height="4" fill="#ECE7DB"></rect><rect x="14" y="30" width="4" height="4" fill="#ECE7DB"></rect><rect x="18" y="30" width="4" height="4" fill="#ECE7DB"></rect><rect x="22" y="30" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="34" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="38" width="4" height="4" fill="#ECE7DB"></rect><rect x="10" y="42" width="4" height="4" fill="#ECE7DB"></rect><rect x="42" y="18" width="4" height="4" fill="#B5202C"></rect><rect x="38" y="22" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="22" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="26" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="30" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="34" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="38" width="4" height="4" fill="#B5202C"></rect><rect x="38" y="42" width="4" height="4" fill="#B5202C"></rect><rect x="42" y="42" width="4" height="4" fill="#B5202C"></rect><rect x="46" y="42" width="4" height="4" fill="#B5202C"></rect><rect x="56" y="18" width="8" height="28" fill="#ECE7DB"></rect></svg><span class="wm">pelud<span class="one">1</span>n</span></a>
+<nav><a href="index.html">inicio</a><a href="writeups.html" class="on">writeups</a></nav>
+<span class="clock" id="clock">--:--:--</span>
+</header>
+<div class="ticker"><div class="run"><span>// writeups</span><span>root@pelud1n:~#</span><span>recon</span><span>exploit</span><span>post-ex</span><span>documentar</span><span>no confíes en nada</span><span>cífralo todo</span><span>// writeups</span><span>root@pelud1n:~#</span><span>recon</span><span>exploit</span><span>post-ex</span><span>documentar</span><span>no confíes en nada</span><span>cífralo todo</span></div></div>
+<main class="wrap">
+<div class="cwin">
+<div class="cwin__bar"><span class="dot"></span><span class="dot b"></span><span class="dot t"></span>&nbsp; writeups/ — pelud1n</div>
+<div class="cwin__body">
+<div class="eyebrow">// 02 · writeups/</div>
+<h1 class="wu-title" style="font-size:46px">WRITEUPS</h1>
+<p style="color:var(--bone-300);margin:0 0 6px;font-size:16px">Máquinas, CTF y notas de laboratorio — reconocimiento, explotación, post-explotación y documentación.</p>
+<hr class="hr-blood">
+<div class="list" id="list"><div class="empty">cargando…</div></div>
+</div></div></main>
+<footer class="foot"><div class="in"><span>pelud1n // offensive-sec</span><span>cífralo todo · no confíes en nada</span></div></footer>
+<script>(function(){
+  var $=function(id){return document.getElementById(id);};
+  var pad=function(n){return String(n).padStart(2,'0');};
+  setInterval(function(){var d=new Date();var c=$('clock');if(c)c.textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());},1000);
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});}
+  async function main(){
+    var list=[];
+    try{var r=await fetch('writeups/list.json');list=await r.json();}catch(e){}
+    if(!Array.isArray(list)||!list.length){$('list').innerHTML='<div class="empty">Aún no hay writeups publicados. Añade el primero siguiendo la guía.</div>';return;}
+    list.sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
+    $('list').innerHTML=list.map(function(w){
+      var tags=(w.tags||[]).map(function(t){return '<span>#'+esc(t)+'</span>';}).join('');
+      return '<a class="row" href="writeup.html?p='+encodeURIComponent(w.slug)+'">'
+        +'<span class="badge plat b">'+esc(w.platform||'WU')+'</span>'
+        +'<span class="info"><span class="t">'+esc(w.title||w.slug)+'</span><span class="tags">'+tags+'</span></span>'
+        +'<span class="right"><div>'+esc(w.date||'')+'</div><div class="go">'+esc(w.difficulty||'leer')+' &rarr;</div></span>'
+        +'</a>';
+    }).join('');
+  }
+  main();
+})();
+</script>
+</body></html>
