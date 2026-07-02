@@ -1,0 +1,65 @@
+<!-- @dsCard group="Portfolio" viewport="1280x900" name="pelud1n — site (DEDSEC redesign)" subtitle="Hacked-desktop personal site · self-contained" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pelud1n — offensive security</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="site.css">
+<style>
+  html { scroll-behavior: smooth; }
+  section[id] { scroll-margin-top: 64px; }
+</style>
+</head>
+<body class="deskbg">
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="_ds_bundle.js"></script>
+  <script type="text/babel" src="parts.jsx"></script>
+  <script type="text/babel" src="panels.jsx"></script>
+  <script type="text/babel">
+    const SECTIONS = [
+      { id: 'ops', label: 'ops' },
+      { id: 'notes', label: 'notes' },
+      { id: 'arsenal', label: 'arsenal' },
+      { id: 'contact', label: 'contact' },
+    ];
+
+    function App() {
+      const [active, setActive] = React.useState('home');
+      React.useEffect(() => {
+        const ids = ['home', ...SECTIONS.map((s) => s.id)];
+        const onScroll = () => {
+          let cur = 'home';
+          for (const id of ids) {
+            const el = document.getElementById(id);
+            if (el && el.getBoundingClientRect().top <= 120) cur = id;
+          }
+          setActive(cur);
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+      }, []);
+      return (
+        <React.Fragment>
+          <TopBar sections={SECTIONS} active={active} />
+          <Ticker />
+          <Hero />
+          <Stats />
+          <Ops />
+          <Notes />
+          <Arsenal />
+          <Contact />
+          <SiteFooter />
+        </React.Fragment>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
